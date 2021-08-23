@@ -43,6 +43,16 @@ interface: 클래스 규격사항 정의
 - Model? entity? DTO? 따로 만들어야 하는건가?
   1. nest에서 class사용을 권장함
   2. entity가 아닌 dto를 주고 받아야 한다?
+  3. 유효성 검사를 한 DTO의 데이터로 Model을 완성시킨다?
+model(entity): DB와 1:1 매핑되는 데이터
+DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 검사를 한다.
+
+- Where should i handle Exception Error
+  [일단 컨트롤러에서 처리하자](https://stackoverflow.com/questions/29731353/what-are-the-best-practices-to-handle-exception-at-controller-service-and-dao-l)
+
+  추후 수정하기 [NestJS Exception Filters](https://docs.nestjs.com/exception-filters)
+
+  - CustomPipe
 
 
 ## 학습자료

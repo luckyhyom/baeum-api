@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 import { Lecture } from './lecture.model';
 import { LectureService } from './lecture.service';
@@ -14,12 +14,22 @@ export class LectureController {
 
     @Get('/search')
     getByTitle(@Query('title') title: string): Lecture {
-        return this.lectureService.getByTitle(title);
+        const lecture = this.lectureService.getByTitle(title);
+        if (!lecture) {
+            throw new NotFoundException(`lecture title ${title} is undefined`);;
+        }
+        return lecture;
     }
 
     @Get('/:id')
     getById(@Param('id') id: number): Lecture {
-        return this.lectureService.getById(id);
+        const lecture = this.lectureService.getById(id);
+        console.log(lecture);
+        
+        if (!lecture) {
+            throw new NotFoundException(`lecture id ${id} is undefined`);
+        }
+        return lecture;
     }
 
     @Post('/')
