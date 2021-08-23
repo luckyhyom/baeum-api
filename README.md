@@ -35,9 +35,14 @@
 - 파일명은 단수? 복수? Product? Products?
 일단 단수로 사용해보자 [단수? 복수?](https://www.it-gundan.com/ko/sql/%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%AA%85%EB%AA%85-%EB%94%9C%EB%A0%88%EB%A7%88-%EB%8B%A8%EC%88%98-%EB%8C%80-%EB%B3%B5%EC%88%98-%EC%9D%B4%EB%A6%84/958085184/)
 
-- Type? Interface?
+- Type? Interface? class?
 type: 데이터 정의,
 interface: 클래스 규격사항 정의
+? class: NestJS에서 DTO를 만들때 권장됨
+
+- Model? entity? DTO? 따로 만들어야 하는건가?
+  1. nest에서 class사용을 권장함
+  2. entity가 아닌 dto를 주고 받아야 한다?
 
 
 ## 학습자료

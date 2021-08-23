@@ -1,4 +1,4 @@
-export type Product = {
+export type Lecture = {
     id: number,
     title: string,
     description: string,
@@ -8,4 +8,7 @@ export type Product = {
     status: Status,
 }
 
-type Status = 'PUBLIC' | 'PRIVATE';
+// export type inputData = {
+// }
+
+export type Status = 'PUBLIC' | 'PRIVATE';
