@@ -17,4 +17,12 @@ export class LectureService {
         })
         return this.lectures[ this.lectures.length - 1 ];
     }
+
+    getByTitle(title: string): Lecture {
+        return this.lectures.find(lecture => lecture.title === title);
+    }
+
+    getById(id: number): Lecture {
+        return this.lectures.find(lecture => lecture.id === id);
+    }
 }

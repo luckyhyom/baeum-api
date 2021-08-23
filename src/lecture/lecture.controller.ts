@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 import { Lecture } from './lecture.model';
 import { LectureService } from './lecture.service';
@@ -10,6 +10,16 @@ export class LectureController {
     @Get('/')
     getAllLectures(): Lecture[] {
         return this.lectureService.getAll();
+    }
+
+    @Get('/search')
+    getByTitle(@Query('title') title: string): Lecture {
+        return this.lectureService.getByTitle(title);
+    }
+
+    @Get('/:id')
+    getById(@Param('id') id: number): Lecture {
+        return this.lectureService.getById(id);
     }
 
     @Post('/')
