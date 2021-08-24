@@ -54,6 +54,15 @@ DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 �
 
   - CustomPipe
 
+- 들어온 값이 custom type에 해당하는지 체크하기 위해서는?
+
+- import의 비용은?
+
+- 유효성 검사 방식 (pipe, decorator)
+
+## comments
+- lecture-status-validation.pipe.ts
+  - 커스텀 타입의 status 값을 배열 대신 객체로 선언하고 싶었고, 고민 끝에 모델에 상수를 선언하여 씀. (임포트 하는게 메모리 비용이 더 비쌀수도 있다.)
 
 ## 학습자료
 - DreamCoding Ellie's Nodejs

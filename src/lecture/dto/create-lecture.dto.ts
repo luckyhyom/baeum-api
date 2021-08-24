@@ -1,4 +1,5 @@
-import { IsInt, IsNotEmpty, IsOptional, Length, MinLength } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, Length, MinLength, Validate, Validator } from "class-validator";
+import { LectureStatus } from "../validator/status-validation";
 
 export class CreateLectureDto {
 
@@ -19,6 +20,9 @@ export class CreateLectureDto {
     readonly price: number;
 
     @IsNotEmpty()
+    @Validate(LectureStatus, {
+        message: 'something went wrong.'
+    })
     readonly status: Status;
 }
 

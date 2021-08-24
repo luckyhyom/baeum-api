@@ -34,6 +34,8 @@ export class LectureController {
 
     @Post('/')
     async createLecture(@Body() data: CreateLectureDto): Promise<Lecture> {
+        console.log(data);
+        
         return await this.lectureService.create(data);
     }
 }

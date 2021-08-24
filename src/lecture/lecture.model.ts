@@ -8,7 +8,7 @@ export type Lecture = {
     status: Status,
 }
 
-// export type inputData = {
-// }
-
 export type Status = 'PUBLIC' | 'PRIVATE';
+
+export const PRIVATE: Status = 'PRIVATE';
+export const PUBLIC: Status = 'PUBLIC';
