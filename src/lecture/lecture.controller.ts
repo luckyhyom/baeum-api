@@ -1,6 +1,6 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
 import { CreateLectureDto } from './dto/create-lecture.dto';
-import { Lecture } from './lecture.model';
+import { Lecture } from './lecture.entity';
 import { LectureService } from './lecture.service';
 
 @Controller('lecture')
@@ -12,28 +12,28 @@ export class LectureController {
         return this.lectureService.getAll();
     }
 
-    @Get('/search')
-    getByTitle(@Query('title') title: string): Lecture {
-        const lecture = this.lectureService.getByTitle(title);
-        if (!lecture) {
-            throw new NotFoundException(`lecture title ${title} is undefined`);;
-        }
-        return lecture;
-    }
+    // @Get('/search')
+    // getByTitle(@Query('title') title: string): Promise <Lecture> {
+    //     const lecture = this.lectureService.getByTitle(title);
+    //     if (!lecture) {
+    //         throw new NotFoundException(`lecture title ${title} is undefined`);;
+    //     }
+    //     return lecture;
+    // }
 
-    @Get('/:id')
-    getById(@Param('id') id: number): Lecture {
-        const lecture = this.lectureService.getById(id);
-        console.log(lecture);
+    // @Get('/:id')
+    // getById(@Param('id') id: number): Promise <Lecture> {
+    //     const lecture = this.lectureService.getById(id);
+    //     console.log(lecture);
         
-        if (!lecture) {
-            throw new NotFoundException(`lecture id ${id} is undefined`);
-        }
-        return lecture;
-    }
+    //     if (!lecture) {
+    //         throw new NotFoundException(`lecture id ${id} is undefined`);
+    //     }
+    //     return lecture;
+    // }
 
     @Post('/')
-    async createLecture(@Body() data: CreateLectureDto): Promise<Lecture> {
+    async createLecture(@Body() data: CreateLectureDto): Promise <Lecture> {
         console.log(data);
         
         return await this.lectureService.create(data);

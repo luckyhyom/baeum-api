@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLectureDto } from './dto/create-lecture.dto';
-import { Lecture } from './lecture.model';
+import { Lecture } from './lecture.entity';
 @Injectable()
 export class LectureService {
 
@@ -11,10 +11,7 @@ export class LectureService {
     }
 
     async create(data: CreateLectureDto): Promise<Lecture> {
-        await this.lectures.push({
-            id: this.lectures.length + 1,
-            ...data,
-        })
+
         return this.lectures[ this.lectures.length - 1 ];
     }
 

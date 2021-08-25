@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
-import * as lecture from '../lecture.model'
+import * as lecture from '../lecture-status'
 
 
 @ValidatorConstraint({ name: 'lectureStatus', async: false })
