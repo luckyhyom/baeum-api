@@ -5,23 +5,6 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -73,3 +56,242 @@ DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 �
 - Nomad Coder's NestJS
 - John Ahn's NestJS
 - NestJS Offilcial Lecture
+
+
+</br>
+# 기능 목록
+
+### 회원
+
+- 회원 가입
+    - SNS
+    - Github
+- 나의 프로필
+    - 이름
+    - 소개
+    - 이메일
+    - 사진
+- 회원정보 수정
+- 나의 강의
+    - 수강중인 강의
+    - 결제 내역
+    - 위시 리스트
+- 로그인
+- 로그아웃
+
+## User Schema
+
+```tsx
+type user = {
+	id: number,
+	userId: string,
+	password: string,
+	name: string,
+	about: string,
+	email: string,
+	photoURL: string,
+	admin: boolean,
+}	
+```
+
+### Token
+
+```tsx
+{
+	jwt: string,
+	username: string,
+}
+```
+
+## Auth API
+
+### 회원 가입 `POST` /auth/signup
+
+Request
+
+```tsx
+{
+	userId: string,
+	password: string,
+	name: string,
+	about: string,
+	email: string,
+	photoURL: string,
+}
+```
+
+Response `200`
+
+```tsx
+{
+	jwt: string,
+	username: string,
+}
+```
+
+### 회원 정보 수정 `POST` /auth
+
+Request
+
+```tsx
+{
+	password: string,
+	name: string,
+	about: string,
+	email: string,
+	photoURL: string,
+}
+```
+
+Response
+
+```tsx
+{
+	name: string,
+	about: string,
+	email: string,
+	photoURL: string,
+}
+```
+
+### 회원 정보 조회 `GET` /auth/:id
+
+Request
+
+```tsx
+{
+	userNumber: number
+}
+```
+
+Response
+
+```tsx
+{
+	name: string,
+	about: string,
+	email: string,
+	photoURL: string,
+}
+```
+
+### 나의 강의 `GET` /lecture/mine/:id
+
+Response
+
+```tsx
+{
+	[ lecture ],
+}
+```
+
+### 로그인 `POST` auth/login
+
+Request
+
+```tsx
+{
+	userId: string,
+	password: string,
+}
+```
+
+Response
+
+```tsx
+{
+	jwt: string,
+	name: string,
+}
+```
+
+### 로그아웃 `POST` auth/logout
+
+Request & Response
+
+```tsx
+{
+	undefined
+}
+```
+
+## 상품
+
+- 쓰기
+    - 설명 글
+    - 
+    - 공개 or 비공개
+- 읽기
+    - 챕터 리스트
+    - 각 챕터 상세보기 (영상 + 글)
+    - 진도율
+        - 각 영상 진도율 표시
+        - 각 영상 진도율 100%면 완료 표시
+        - 전체 챕터 진도율
+- 수정
+- 삭제
+- 검색
+    - 태그
+- 찜하기
+- 내 목록
+- 구매하기
+- 평점 (부동소수점?)
+
+### Lecture Schema
+
+```tsx
+type Lecture = {
+	id: number,
+	author: number,
+	title: string,
+	description: string,
+	chapters: number[],
+	tags: string[],
+	rate: number,
+	state: boolean,
+}
+```
+
+### Chapter Schema
+
+```tsx
+type Chapter = {
+	id: number,
+	lectureId: number,
+	title: string,
+	description: string,
+	videoURL: string,
+}
+```
+
+### Wish Schema
+
+```tsx
+type Wish = {
+	id: number,
+	userId: number,
+	lectureId: number,
+}
+```
+
+### WatchingLecture Schema
+
+```tsx
+type WatchingVideo = {
+	id: number,
+	userId: number,
+	lectureId: number,
+}
+```
+
+### purchasedLecture Schema
+
+```tsx
+type purchasedLecture = {
+	id: number,
+	userId: number,
+	lectureId: number,
+}
+```
+
+## Lecture API
