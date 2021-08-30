@@ -57,9 +57,9 @@ DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 �
 - John Ahn's NestJS
 - NestJS Offilcial Lecture
 
-
-</br>
 # 기능 목록
+
+TODO: Error Code
 
 ### 회원
 
@@ -120,7 +120,7 @@ Request
 }
 ```
 
-Response `200`
+Response `201`
 
 ```tsx
 {
@@ -143,7 +143,7 @@ Request
 }
 ```
 
-Response
+Response `200`
 
 ```tsx
 {
@@ -156,15 +156,7 @@ Response
 
 ### 회원 정보 조회 `GET` /auth/:id
 
-Request
-
-```tsx
-{
-	userNumber: number
-}
-```
-
-Response
+Response `200`
 
 ```tsx
 {
@@ -177,15 +169,15 @@ Response
 
 ### 나의 강의 `GET` /lecture/mine/:id
 
-Response
+Response `200`
 
 ```tsx
 {
-	[ lecture ],
+	[ lecture, lecture ... ],
 }
 ```
 
-### 로그인 `POST` auth/login
+### 로그인 `POST` /auth/login
 
 Request
 
@@ -196,7 +188,7 @@ Request
 }
 ```
 
-Response
+Response `200`
 
 ```tsx
 {
@@ -205,9 +197,9 @@ Response
 }
 ```
 
-### 로그아웃 `POST` auth/logout
+### 로그아웃 `POST` /auth/logout
 
-Request & Response
+Request & Response `200`
 
 ```tsx
 {
@@ -215,15 +207,28 @@ Request & Response
 }
 ```
 
+### 회원 탈퇴 `POST` /auth/:id
+
+Request
+
+```tsx
+{
+	userId: string,
+	password: string,
+}
+```
+
+Response `204`
+
 ## 상품
 
 - 쓰기
     - 설명 글
-    - 
     - 공개 or 비공개
 - 읽기
     - 챕터 리스트
     - 각 챕터 상세보기 (영상 + 글)
+        - 강의를 구매한 사용자만 읽기 가능
     - 진도율
         - 각 영상 진도율 표시
         - 각 영상 진도율 100%면 완료 표시
@@ -232,10 +237,11 @@ Request & Response
 - 삭제
 - 검색
     - 태그
+    - 정렬 옵션 (평점순, 조회순)
 - 찜하기
 - 내 목록
 - 구매하기
-- 평점 (부동소수점?)
+- 평점
 
 ### Lecture Schema
 
@@ -245,7 +251,7 @@ type Lecture = {
 	author: number,
 	title: string,
 	description: string,
-	chapters: number[],
+	chapters: Chapter[],
 	tags: string[],
 	rate: number,
 	state: boolean,
@@ -256,8 +262,6 @@ type Lecture = {
 
 ```tsx
 type Chapter = {
-	id: number,
-	lectureId: number,
 	title: string,
 	description: string,
 	videoURL: string,
@@ -284,7 +288,7 @@ type WatchingVideo = {
 }
 ```
 
-### purchasedLecture Schema
+### PurchasedLecture Schema
 
 ```tsx
 type purchasedLecture = {
@@ -295,3 +299,123 @@ type purchasedLecture = {
 ```
 
 ## Lecture API
+
+- 쓰기
+    - 제목
+    - 설명
+    - 챕터
+    - 공개 or 비공개
+- 읽기
+    - 챕터 리스트
+    - 각 챕터 상세보기 (영상 + 글)
+        - 강의를 구매한 사용자만 읽기 가능
+- 수정
+- 삭제
+- 검색
+
+### 강의 등록 `POST` /lecture
+
+Request
+
+```tsx
+{
+	author: number,
+	title: string,
+	description: string,
+	chapters: [
+		{ 
+			title: string,
+			description: string,
+			videoURL: string,
+		},
+		...
+	],
+	tags: string[],
+	state: boolean,
+}
+```
+
+Response `201`
+
+### 강의 전체보기 `GET` /lecture
+
+Response `200`
+
+```tsx
+{
+		[ lecture, lecture ... ]
+}	
+```
+
+### 강의 상세보기 `GET` /lecture/:id
+
+Response `200`
+
+```tsx
+{
+	...lecture
+}
+```
+
+### 강의 수정 `POST` /lecture
+
+Request
+
+```tsx
+{
+	author: number,
+	title: string,
+	description: string,
+	chapters: [
+		{
+			title: string,
+			description: string,
+			videoURL: string,
+		},
+		...
+	],
+	tags: string[],
+	state: boolean,
+}
+```
+
+Response `200`
+
+### 강의 삭제 `DELETE` /lecture/:id
+
+Response `204`
+
+### 강의 검색 `GET` /lecture/search?title=
+
+Response `200`
+
+```tsx
+{
+	[ lecture, lecture ... ]
+}
+```
+
+### 강의 읽기 권한 확인 `POST` /lecture/checking/:id
+
+Request
+
+```tsx
+{
+	jwt: string,
+}
+```
+
+Response `200`
+
+### 강의 읽기 권한 등록 `POST` /lecture/checking
+
+Request
+
+```tsx
+{
+	userId: number,
+	lectureId: number,
+}
+```
+
+Response `200`
