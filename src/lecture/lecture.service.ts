@@ -1,25 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateLectureDto } from './dto/create-lecture.dto';
+import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
+import { LectureRepository } from './lecture.repository';
 @Injectable()
 export class LectureService {
 
-    private lectures: Lecture[] = [];
+    constructor(
+        @InjectRepository(LectureRepository)
+        private lectureRepository: LectureRepository,
+    ){}
 
-    getAll(): Lecture[] {
-        return  this.lectures;
+    getAll(): Promise<Lecture[]> {
+        return  this.lectureRepository.getAll();
     }
 
-    async create(data: CreateLectureDto): Promise<Lecture> {
-
-        return this.lectures[ this.lectures.length - 1 ];
+    create(data: CreateLectureDto): Promise<Lecture> {
+        const result = this.lectureRepository.createOne(data);
+        return result;
     }
 
-    getByTitle(title: string): Lecture {
-        return this.lectures.find(lecture => lecture.title === title);
+    getByTitle(title: string): Promise<Lecture> {
+        return this.lectureRepository.getByTitle(title);
     }
 
-    getById(id: number): Lecture {
-        return this.lectures.find(lecture => lecture.id === id);
+    getById(id: number): Promise<Lecture> {
+        return this.lectureRepository.getById(id);
+    }
+
+    updateOne(id: number, updateLectureDto: UpdateLectureDto): Promise<Lecture> {
+        const target = this.getById(id);
+        if (!target) {
+            throw new Error("No lecture.");
+        }
+        return this.lectureRepository.updateOne(id, updateLectureDto);
     }
 }

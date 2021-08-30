@@ -1,5 +1,4 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Status } from "./lecture-status";
 
 @Entity()
 export class Lecture extends BaseEntity {
@@ -22,5 +21,5 @@ export class Lecture extends BaseEntity {
     price: number;
 
     @Column()
-    status: Status;
+    viewStatus: boolean;
 }

@@ -46,6 +46,60 @@ DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 �
 - database 관련 (entity) 파일은 어디에 위치해야할까?
 익스프레스에서는 모든 sequlize entity 파일을 db폴더에 두고 관리했었음.
 
+- config 파일 만들기, 일반 ts파일에서 process.env 접근 안되는 이유?
+1. process.env 접근하는 방법 (1)
+```tsx
+import { ConfigModule } from '@nestjs/config'
+ConfigModule.forRoot();
+```
+2. nestjs 내장 라이브러리 namespace 사용하기
+```tsx
+// configs/db-config.ts 
+export default registerAs('database', () => ({
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT || 5432
+}));
+
+// app.module.ts
+import dbconfig from 'configs/db-config.ts';
+...
+imports: [
+    ConfigModule.forFeature(dbconfig)
+]
+
+// servise.ts
+constructor(
+  @Inject(databaseConfig.KEY)
+  private dbConfig: ConfigType<typeof databaseConfig>,
+) {
+	dbConfig.host
+}
+
+```
+
+- dotenv
+운영체제 환경변수를 직접 설정하지 않아도 .env파일을 자동으로 읽어 설정해주는 라이브러리
+원래는 터미널에서 export DB_USER=hostname 설정 후에 process.env.DB_USER를 쓸 수 있다.
+
+- Mapped Type - Partial
+```tsx
+// 모든 속성이 선택사항으로 설정된 타입(클래스)을 반환
+export class UpdateCatDto extends PartialType(CreateCatDto) {}
+```
+
+- 변수명 수정하기가 번거롭다.
+status: string을 viewStatus: boolean으로 변경하기 위한 과정이 번거롭다.
+
+- service와 repository 차이
+repository: db에 접근하는 객체
+service: 비즈니스 로직 실행 객체
+
+- updateDTO request 아무값 넣지 않았을때 에러처리 하는 방법
+
+## TODO
+- config 내장 라이브러리 사용하기
+-
+
 ## comments
 - lecture-status-validation.pipe.ts
   - 커스텀 타입의 status 값을 배열 대신 객체로 선언하고 싶었고, 고민 끝에 모델에 상수를 선언하여 씀. (임포트 하는게 메모리 비용이 더 비쌀수도 있다.)

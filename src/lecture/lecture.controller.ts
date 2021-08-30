@@ -1,5 +1,6 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateLectureDto } from './dto/create-lecture.dto';
+import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
 import { LectureService } from './lecture.service';
 
@@ -7,35 +8,40 @@ import { LectureService } from './lecture.service';
 export class LectureController {
     constructor(private lectureService: LectureService) {}
 
-    @Get('/')
-    getAllLectures(): Lecture[] {
+    @Get()
+    getAllLectures(): Promise<Lecture[]> {
         return this.lectureService.getAll();
     }
 
-    // @Get('/search')
-    // getByTitle(@Query('title') title: string): Promise <Lecture> {
-    //     const lecture = this.lectureService.getByTitle(title);
-    //     if (!lecture) {
-    //         throw new NotFoundException(`lecture title ${title} is undefined`);;
-    //     }
-    //     return lecture;
-    // }
-
-    // @Get('/:id')
-    // getById(@Param('id') id: number): Promise <Lecture> {
-    //     const lecture = this.lectureService.getById(id);
-    //     console.log(lecture);
-        
-    //     if (!lecture) {
-    //         throw new NotFoundException(`lecture id ${id} is undefined`);
-    //     }
-    //     return lecture;
-    // }
-
-    @Post('/')
-    async createLecture(@Body() data: CreateLectureDto): Promise <Lecture> {
-        console.log(data);
-        
-        return await this.lectureService.create(data);
+    @Get('/search')
+    getByTitle(@Query('title') title: string): Promise <Lecture> {
+        const lecture = this.lectureService.getByTitle(title);
+        if (!lecture) {
+            throw new NotFoundException(`lecture title ${title} is undefined`);;
+        }
+        return lecture;
     }
+
+    @Get(':id')
+    getById(@Param('id') id: number): Promise <Lecture> {
+        const lecture = this.lectureService.getById(id);
+        console.log(lecture);
+        
+        if (!lecture) {
+            throw new NotFoundException(`lecture id ${id} is undefined`);
+        }
+        return lecture;
+    }
+
+    @Post()
+    createLecture(@Body() data: CreateLectureDto): Promise<Lecture> {
+        console.log(data);
+        return this.lectureService.create(data);
+    }
+
+    @Patch(':id')
+    patchLecture(@Param('id') id: number, @Body() updateLectureDto: UpdateLectureDto): Promise<Lecture> {
+        return this.lectureService.updateOne(id, updateLectureDto);
+    }
+
 }
