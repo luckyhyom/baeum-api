@@ -57,6 +57,9 @@ DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 �
 - John Ahn's NestJS
 - NestJS Offilcial Lecture
 
+## Scheduler
+[Task List](https://docs.google.com/spreadsheets/d/18JKjdmzfDFWJOE5eyLeBO9D9hJ33JBrW7tyZJU244-E/edit?usp=sharing)
+
 # 기능 목록
 
 TODO: Error Code
