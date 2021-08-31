@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Patch, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -15,7 +15,7 @@ export class AuthController {
 
     @Post('login')
     login(@Body() loginDTO: LoginDTO) {
-        this.authService.login(loginDTO);
+        return this.authService.login(loginDTO);
     }
 
     @Patch()
@@ -32,5 +32,4 @@ export class AuthController {
     deleteUser(@Body() loginDTO: LoginDTO) {
         this.authService.deleteUser(loginDTO);
     }
-
 }

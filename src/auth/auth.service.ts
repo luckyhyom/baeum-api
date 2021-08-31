@@ -5,6 +5,7 @@ import { UpdateUserDTO } from './dto/update-user.dto';
 import { LoginDTO } from './dto/user.dto';
 import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcryptjs'
+import { JwtService } from '@nestjs/jwt';
 
 const salt = 10;
 
@@ -12,7 +13,8 @@ const salt = 10;
 export class AuthService {
     constructor(
         @InjectRepository(UserRepository)
-        private userRepository: UserRepository
+        private userRepository: UserRepository,
+        private jwtService: JwtService
     ) {}
 
     async signup(createUserDTO: CreateUserDTO) {
@@ -34,16 +36,20 @@ export class AuthService {
 
     async login(loginDTO: LoginDTO) {
         // 아이디 유무 확인
-        const user = await this.userRepository.findByUserId(loginDTO.userId)
+        const { userId, password } = await this.userRepository.findByUserId(loginDTO.userId)
         
-        if (!user) {
+        if (!userId) {
             throw new Error("no user");
         }
 
-        // 패스워드 검증        
-        console.log(await bcrypt.compare(loginDTO.password, user.password));
-        // bcrypt.compare(password,)
-        // jwt 송신
+        // 패스워드 검증
+        let accessToken;
+        if (await bcrypt.compare(loginDTO.password, password)) {
+            accessToken = this.jwtService.sign({
+                userId
+            })
+            return { accessToken };
+        }
     }
 
     updateUser(updateUserDTO: UpdateUserDTO) {
