@@ -43,5 +43,4 @@ export class LectureController {
     patchLecture(@Param('id') id: number, @Body() updateLectureDto: UpdateLectureDto): Promise<Lecture> {
         return this.lectureService.updateOne(id, updateLectureDto);
     }
-
 }
