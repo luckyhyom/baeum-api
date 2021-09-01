@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Patch, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -14,8 +15,8 @@ export class AuthController {
     }
 
     @Post('login')
-    login(@Body() loginDTO: LoginDTO) {
-        return this.authService.login(loginDTO);
+    login(@Body() loginDTO: LoginDTO, @Res({passthrough: true}) res: Response) {
+        return this.authService.login(loginDTO, res);
     }
 
     @Patch()

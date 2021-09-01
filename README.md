@@ -14,7 +14,7 @@
 - 학습한 것을 실제로 사용 및 응용
 - 좋은 설계를 위한 리팩토링 훈련
 
-## Question List
+## Question List & Memo
 - 파일명은 단수? 복수? Product? Products?
 일단 단수로 사용해보자 [단수? 복수?](https://www.it-gundan.com/ko/sql/%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%AA%85%EB%AA%85-%EB%94%9C%EB%A0%88%EB%A7%88-%EB%8B%A8%EC%88%98-%EB%8C%80-%EB%B3%B5%EC%88%98-%EC%9D%B4%EB%A6%84/958085184/)
 
@@ -106,9 +106,83 @@ service: 비즈니스 로직 실행 객체
 
 - joi
 
+- single responsibility principle !
+하나의 책임을 가진 객체들
+서비스는 각 객체에게 필요한 것을 요청해서 복잡한 로직을 처리한다.
+
+- Authentication ( jwt와 bcrypt를 어떻게 응용 할 것이냐 )
+    - 세션 / 쿠키 / 캐시
+        1. 캐시는 브라우저의 빠른 렌더링을 위한 용도
+            - 이미지, 오디오, 비디오 파일 등을 캐싱
+            - 만료 기간이 없어 사용자가 직접 삭제 해야함
+        2. 세션과 쿠키는 사용자 인증 용도
+            - 쿠키는 서버가 클라이언트에게 인증 키를 넘겨 줄 때 사용하는 저장소
+    - session
+        1. 서버의 메모리에 사용자 인증 정보를 저장한다.
+            - 쿠키의 stateless의 한계(어떤 한계?)를 보완
+            - 브라우저를 종료시키기 전까지 서버를 이용해 사용자 요청에 state를 가진다.
+        2. 서버가 종료되면 초기화되므로, 세션을 저장할 서버를 따로 두기도 한다. ( Redis )
+        3. 쿠키에 사용자 개인 정보가 아닌 식별값만을 암호화 해서 넘겨준다.
+            - 탈취한 식별값을 이용한다면 jwt와 다를게 있나?
+        5. 장점: http only, 사용자데이터가 아닌 세션을 주고받으므로 비교적 안전 ??
+        6. 단점: 서버에 상태가 있다. 분산형 서버라고 하더라도 요청이 세션서버에 몰려서 느려짐
+    - jwt
+        1. 장점: No state. 세션정보를 가지고 있을 필요 없이 시크릿 키로 검증만 하면 되므로 마이크로 서비스에 용이.
+        2. 단점: 계속 주고받으므로 위험함. → 기간 만료 설정
+        3. 인증 성공하면 request에 디코딩한 토큰에 들어있는 id와 token 등록하고 다음 미들웨어에 전달
+        4. 어디다 저장 할 것이냐? → web=cookie, mobile=body로 받아서 모바일저장소에 저장
+    - XSS 대응
+        1. 로컬스토리지는 javascript로 접근 가능하므로 서버는 http only 쿠키를 사용하여 토큰을 보냄.
+        2. 클라이언트가 토큰을 저장할 때 브라우저의 로컬스토리지를 사용하지 않기 위함
+            - 모바일 저장소에 비해서 많이 취약하기 때문
+        3. server는 클라이언트가 보낸 토큰을 req.cookies로 조회 가능
+        4. 웹 브라우저가 http-only-cookie를  자동으로 저장
+            - 쿠키이므로 웹 클라이언트는 header에 Authorization 설정 필요 없어짐
+            - 모바일 클라이언트는 통상적으로 쿠키를 사용하지 않으므로 헤더에 Authorization 설정
+        5. 클라이언트는 요청 옵션에 credentials: 'include'를 추가하면 쿠키를 헤더에 포함시킴.
+        6. 개발자 도구 외에 확인 할 방법 없음
+        7. 저장소 접근 방법이 없으므로, 로그아웃(토큰 제거)은 클라이언트가 서버에게 빈 토큰 쿠키를 요청해야한다.
+    - CSRF 대응
+        1. 클라이언트는 헤더에 커스텀 옵션(_csrk-token)을 암호화된 번호를 담아서 서버에게 보냄
+        2. 서버에게 POST등의 요청을 할 때 검증된 사이트라는 알리는 키를 커스텀 헤더에 포함해야함.
+
+- session과 JWT의 인증 방식 차이점에 대해
+     - session도 결국 JWT처럼 쿠키를 이용해 브라우저에 session id를 저장하고 이를 탈취당하면 해커가 계정을 사용 할 수 있을 것 같은데
+     - JWT가 http-only 옵션을 이용하고, 사용자 정보도 최소한의 것만 포함시키면 세션이 어떤 점에서 JWT보다 보안에 더 유리 할 수 있을까?
+
+- CORS
+    - 브라우저에서만 가지고있는 정책
+    - 같은 도메인이 아니면 파일을 주고받을 수 없음
+    - 다른 도메인을 허락하기 위해 서버에서 응답 헤더에 Access-Control-Allow-Origin 추가
+
+    ```tsx
+    app.use((req,res,next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http...');
+    res.setHeader(
+    	'Access-Control-Allow-Methods',
+    	'OPTIONS, GET, POST, PUT, DELETE');
+    next();
+    });
+    ```
+
+    - cors express의 미들웨어 사용
+
+    ```tsx
+    app.use(
+    	cors({
+    		origin: [url],
+    		credentials: true, // 헤더에 토큰등의 정보를 추가하는 것을 허용
+    	})
+    );
+    ```
+
+
 ## TODO
 - config 내장 라이브러리 사용하기
--
+- sliding session
+- access token
+- useGuards 에서 cookie 검사 추가 하는 법
+- express용 Req()없이 cookie 이용 하기
 
 ## comments
 - lecture-status-validation.pipe.ts

@@ -6,6 +6,7 @@ import { LoginDTO } from './dto/user.dto';
 import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt';
+import { CookieOptions, Response } from 'express';
 
 const salt = 10;
 
@@ -34,7 +35,7 @@ export class AuthService {
         return 'good'
     }
 
-    async login(loginDTO: LoginDTO) {
+    async login(loginDTO: LoginDTO, res: Response) {
         // 아이디 유무 확인
         const { userId, password } = await this.userRepository.findByUserId(loginDTO.userId)
         
@@ -48,6 +49,7 @@ export class AuthService {
             accessToken = this.jwtService.sign({
                 userId
             })
+            this.setToken(accessToken, res);
             return { accessToken };
         }
     }
@@ -75,5 +77,16 @@ export class AuthService {
 
     async hashValue(password: string): Promise<string> {
         return await bcrypt.hash(password, salt)
+    }
+
+    setToken(accessToken: string, res: Response) {
+        // brower should have credentials: 'include' option.
+        const options: CookieOptions = {
+            maxAge: 10 * 1000,
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+        };
+        res.cookie('token', accessToken, options)
     }
 }
