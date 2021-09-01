@@ -102,9 +102,7 @@ service: 비즈니스 로직 실행 객체
 
 - 에러 던진 후 서버 안죽는 법은? (로그인)
 
-- passport
-
-- joi
+- passport란?
 
 - single responsibility principle !
 하나의 책임을 가진 객체들
@@ -183,6 +181,8 @@ service: 비즈니스 로직 실행 객체
 - access token
 - useGuards 에서 cookie 검사 추가 하는 법
 - express용 Req()없이 cookie 이용 하기
+- joi
+- CanActivate
 
 ## comments
 - lecture-status-validation.pipe.ts

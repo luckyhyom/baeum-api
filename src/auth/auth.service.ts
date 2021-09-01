@@ -82,7 +82,7 @@ export class AuthService {
     setToken(accessToken: string, res: Response) {
         // brower should have credentials: 'include' option.
         const options: CookieOptions = {
-            maxAge: 10 * 1000,
+            maxAge: 60 * 60 * 2 * 1000,
             httpOnly: true,
             sameSite: 'none',
             secure: true
