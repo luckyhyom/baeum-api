@@ -2,11 +2,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser'
+import { CSRFGuard } from './auth/csrf.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-
+  app.useGlobalGuards(new CSRFGuard());
   app.enableCors({
     origin: 'http://127.0.0.1:5500',
     credentials: true

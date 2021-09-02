@@ -15,98 +15,15 @@
 - 좋은 설계를 위한 리팩토링 훈련
 
 ## Question List & Memo
-- 파일명은 단수? 복수? Product? Products?
-일단 단수로 사용해보자 [단수? 복수?](https://www.it-gundan.com/ko/sql/%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%AA%85%EB%AA%85-%EB%94%9C%EB%A0%88%EB%A7%88-%EB%8B%A8%EC%88%98-%EB%8C%80-%EB%B3%B5%EC%88%98-%EC%9D%B4%EB%A6%84/958085184/)
-
-- Type? Interface? class?
-type: 데이터 정의,
-interface: 클래스 규격사항 정의
-? class: NestJS에서 DTO를 만들때 권장됨
-
-- Model? entity? DTO? 따로 만들어야 하는건가?
-  1. nest에서 class사용을 권장함
-  2. entity가 아닌 dto를 주고 받아야 한다?
-  3. 유효성 검사를 한 DTO의 데이터로 Model을 완성시킨다?
-model(entity): DB와 1:1 매핑되는 데이터
-DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 검사를 한다.
-
-- Where should i handle Exception Error
-  [일단 컨트롤러에서 처리하자](https://stackoverflow.com/questions/29731353/what-are-the-best-practices-to-handle-exception-at-controller-service-and-dao-l)
-
-  추후 수정하기 [NestJS Exception Filters](https://docs.nestjs.com/exception-filters)
-
-  - CustomPipe
-
-- 들어온 값이 custom type에 해당하는지 체크하기 위해서는?
-
-- import의 비용은?
-
-- 유효성 검사 방식 (pipe, decorator)
-
-- database 관련 (entity) 파일은 어디에 위치해야할까?
-익스프레스에서는 모든 sequlize entity 파일을 db폴더에 두고 관리했었음.
-
-- config 파일 만들기, 일반 ts파일에서 process.env 접근 안되는 이유?
-1. process.env 접근하는 방법 (1)
-```tsx
-import { ConfigModule } from '@nestjs/config'
-ConfigModule.forRoot();
-```
-2. nestjs 내장 라이브러리 namespace 사용하기
-```tsx
-// configs/db-config.ts 
-export default registerAs('database', () => ({
-  host: process.env.DATABASE_HOST,
-  port: process.env.DATABASE_PORT || 5432
-}));
-
-// app.module.ts
-import dbconfig from 'configs/db-config.ts';
-...
-imports: [
-    ConfigModule.forFeature(dbconfig)
-]
-
-// servise.ts
-constructor(
-  @Inject(databaseConfig.KEY)
-  private dbConfig: ConfigType<typeof databaseConfig>,
-) {
-	dbConfig.host
-}
-
-```
-
-- dotenv
-운영체제 환경변수를 직접 설정하지 않아도 .env파일을 자동으로 읽어 설정해주는 라이브러리
-원래는 터미널에서 export DB_USER=hostname 설정 후에 process.env.DB_USER를 쓸 수 있다.
-
-- Mapped Type - Partial
-```tsx
-// 모든 속성이 선택사항으로 설정된 타입(클래스)을 반환
-export class UpdateCatDto extends PartialType(CreateCatDto) {}
-```
-
-- 변수명 수정하기가 번거롭다.
-status: string을 viewStatus: boolean으로 변경하기 위한 과정이 번거롭다.
-
-- service와 repository 차이
-repository: db에 접근하는 객체
-service: 비즈니스 로직 실행 객체
-
-- updateDTO request 아무값 넣지 않았을때 에러처리 하는 방법
-
-- save-dev
-
-- 내부 함수는 클래스 밖에둬서 this없이 써도 되나?
-
-- 에러 던진 후 서버 안죽는 법은? (로그인)
-
-- passport란?
 
 - single responsibility principle !
-하나의 책임을 가진 객체들
-서비스는 각 객체에게 필요한 것을 요청해서 복잡한 로직을 처리한다.
+  - 하나의 책임을 가진 객체들
+  - 서비스는 각 객체에게 필요한 것을 요청해서 복잡한 로직을 처리한다.
+
+- Type? Interface? Class?
+  - type: 데이터 정의,
+  - interface: 클래스 규격사항 정의
+  - class: NestJS에서 DTO를 만들때 권장됨
 
 - Authentication ( jwt와 bcrypt를 어떻게 응용 할 것이냐 )
     - 세션 / 쿠키 / 캐시
@@ -174,15 +91,101 @@ service: 비즈니스 로직 실행 객체
     );
     ```
 
+- CanActivate ?
+	- Guard를 구현할 때 필요
+	- Execution Context를 매개변수로 받음
+
+- reflector ?
+
+- Model? entity? DTO? 따로 만들어야 하는건가?
+  1. nest에서 class사용을 권장함
+  2. entity가 아닌 dto를 주고 받아야 한다?
+  3. 유효성 검사를 한 DTO의 데이터로 Model을 완성시킨다?
+model(entity): DB와 1:1 매핑되는 데이터
+DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 검사를 한다.
+
+- config 파일 만들기, 일반 ts파일에서 process.env 접근 안되는 이유?
+1. process.env 접근하는 방법 (1)
+```tsx
+import { ConfigModule } from '@nestjs/config'
+ConfigModule.forRoot();
+```
+2. nestjs 내장 라이브러리 namespace 사용하기
+```tsx
+// configs/db-config.ts 
+export default registerAs('database', () => ({
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT || 5432
+}));
+
+// app.module.ts
+import dbconfig from 'configs/db-config.ts';
+...
+imports: [
+    ConfigModule.forFeature(dbconfig)
+]
+
+// servise.ts
+constructor(
+  @Inject(databaseConfig.KEY)
+  private dbConfig: ConfigType<typeof databaseConfig>,
+) {
+	dbConfig.host
+}
+
+```
+
+- dotenv
+  - 운영체제 환경변수를 직접 설정하지 않아도 .env파일을 자동으로 읽어 설정해주는 라이브러리
+  원래는 터미널에서 export DB_USER=hostname 설정 후에 process.env.DB_USER를 쓸 수 있다.
+
+- Mapped Type - Partial
+```tsx
+// 모든 속성이 선택사항으로 설정된 타입(클래스)을 반환
+export class UpdateCatDto extends PartialType(CreateCatDto) {}
+```
+
+- Where should i handle Exception Error
+  [일단 컨트롤러에서 처리하자](https://stackoverflow.com/questions/29731353/what-are-the-best-practices-to-handle-exception-at-controller-service-and-dao-l)
+
+  추후 수정하기 [NestJS Exception Filters](https://docs.nestjs.com/exception-filters)
+
+  - CustomPipe
+
+- 들어온 값이 custom type에 해당하는지 체크하기 위해서는?
+
+- 유효성 검사 방식 (pipe, decorator)
+
+- 파일명은 단수? 복수? Product? Products?
+일단 단수로 사용해보자 [단수? 복수?](https://www.it-gundan.com/ko/sql/%ED%85%8C%EC%9D%B4%EB%B8%94-%EB%AA%85%EB%AA%85-%EB%94%9C%EB%A0%88%EB%A7%88-%EB%8B%A8%EC%88%98-%EB%8C%80-%EB%B3%B5%EC%88%98-%EC%9D%B4%EB%A6%84/958085184/)
+
+- database 관련 (entity) 파일은 어디에 위치해야할까?
+익스프레스에서는 모든 sequlize entity 파일을 db폴더에 두고 관리했었음.
+
+- 변수명 수정하기가 번거롭다.
+status: string을 viewStatus: boolean으로 변경하기 위한 과정이 번거롭다.
+
+- service와 repository 차이
+repository: db에 접근하는 객체
+service: 비즈니스 로직 실행 객체
+
+- updateDTO request 아무값 넣지 않았을때 에러처리 하는 방법
+
+- save-dev
+
+- 내부 함수는 클래스 밖에둬서 this없이 써도 되나?
+
+- 에러 던진 후 서버 안죽는 법은? (로그인)
+
+- passport란?
 
 ## TODO
 - config 내장 라이브러리 사용하기
 - sliding session
 - access token
-- useGuards 에서 cookie 검사 추가 하는 법
-- express용 Req()없이 cookie 이용 하기
-- joi
-- CanActivate
+- ~~useGuards 에서 cookie 검사 추가 하는 법~~ (완료)
+- express용 Req()없이 cookie 이용 하기 (일부 적용)
+- joi 적용
 
 ## comments
 - lecture-status-validation.pipe.ts

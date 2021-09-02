@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -32,5 +32,10 @@ export class AuthController {
     @Delete()
     deleteUser(@Body() loginDTO: LoginDTO) {
         this.authService.deleteUser(loginDTO);
+    }
+
+    @Get('csrf-token')
+    getCSRFToken() {
+        return this.authService.createCSRFToken();
     }
 }

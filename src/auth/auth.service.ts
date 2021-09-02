@@ -7,9 +7,9 @@ import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt';
 import { CookieOptions, Response } from 'express';
+import config from 'src/configs/config';
 
 const salt = 10;
-
 @Injectable()
 export class AuthService {
     constructor(
@@ -88,5 +88,9 @@ export class AuthService {
             secure: true
         };
         res.cookie('token', accessToken, options)
+    }
+
+    async createCSRFToken() {
+        return await bcrypt.hash(config.csrf.password,1);
     }
 }
