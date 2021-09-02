@@ -4,7 +4,6 @@ import config from "./config";
 
 export const typeORMConfig: TypeOrmModuleOptions = {
     type: 'postgres',
-    // ...configuration,
     host: config.db.host,
     port: config.port,
     username: config.db.username,

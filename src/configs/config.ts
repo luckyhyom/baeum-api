@@ -12,34 +12,14 @@ function required(key, defaultValue = undefined) {
 export const config = {
     port: required('HOST_PORT',5432),
     db: {
-        // host: 'localhost',
-        // username: 'postgres',
-        // database: 'baeum-api',
-        // password: 'super1234',
-        
-        host: 'localhost',
-        username: 'postgres',
-        database: 'baeum-api',
-        // password: 'super1234',
-
-        // host: required('DB_HOST'),
-        // username: required('DB_USER'),
-        // database: required('DB_DATABASE'),
+        host: required('DB_HOST'),
+        username: required('DB_USER'),
+        database: required('DB_DATABASE'),
         password: required('DB_PASSWORD'),
     },
+    csrf: {
+        password: required('CSRF_PASSWORD')
+    }
 }
 
 export default config;
-// export const config = {
-//     port: required('HOST_PORT',5432),
-//     db: {
-//         host: 'localhost',
-//         username: 'postgres',
-//         database: 'baeum-api',
-//         password: 'super1234',
-//         // host: required('DB_HOST'),
-//         // username: required('DB_USER'),
-//         // database: required('DB_DATABASE'),
-//         // password: required('DB_PASSWORD'),
-//     },
-// }
