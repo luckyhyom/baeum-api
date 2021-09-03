@@ -20,7 +20,7 @@ export class CSRFGuard implements CanActivate {
         ) { 
             return true;
         }
-        return this.validateCRSFToken(request.headers['crsf_token']);
+        return this.validateCRSFToken(request.headers['csrf_token']);
     }
     
     async validateCRSFToken(crsfToken: string): Promise<boolean> {
