@@ -1,6 +1,8 @@
 import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { ParamUser } from 'src/auth/user.decorator';
+import { User } from 'src/auth/user.entity';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
@@ -38,9 +40,8 @@ export class LectureController {
     }
 
     @Post()
-    createLecture(@Body() data: CreateLectureDto): Promise<Lecture> {
-        console.log(data);
-        return this.lectureService.create(data);
+    createLecture(@Body() data: CreateLectureDto, @ParamUser() user: User): Promise<Lecture> {
+        return this.lectureService.create(data, user);
     }
 
     @Patch(':id')

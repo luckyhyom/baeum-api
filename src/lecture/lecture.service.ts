@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
@@ -17,8 +18,8 @@ export class LectureService {
         return  this.lectureRepository.getAll();
     }
 
-    create(data: CreateLectureDto): Promise<Lecture> {
-        const result = this.lectureRepository.createOne(data);
+    create(data: CreateLectureDto, user: User): Promise<Lecture> {
+        const result = this.lectureRepository.createOne(data,user);
         return result;
     }
 
