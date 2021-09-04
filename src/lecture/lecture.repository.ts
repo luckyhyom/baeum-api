@@ -7,7 +7,7 @@ import { Lecture } from "./lecture.entity";
 @EntityRepository(Lecture)
 export class LectureRepository extends Repository<Lecture> {
     async getAll(): Promise<Lecture[]> {
-        return await this.find();
+        return await this.find({ relations: ['user'] });
     }
 
     async createOne(data: CreateLectureDto, user: User): Promise<Lecture> {

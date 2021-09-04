@@ -37,15 +37,17 @@ export class AuthService {
 
     async login(loginDTO: LoginDTO, res: Response) {
         // 아이디 유무 확인
-        const { userId, password, id } = await this.userRepository.findByUserId(loginDTO.userId)
-        
-        if (!userId) {
+        const { userId, password } = loginDTO;
+        const { id } = await this.userRepository.findByUserId(userId);
+        if (!id) {
             throw new Error("no user");
         }
+        
+        const targetPassword = await this.userRepository.getPassword(userId);
 
         // 패스워드 검증
         let accessToken;
-        if (await bcrypt.compare(loginDTO.password, password)) {
+        if (await bcrypt.compare(password, targetPassword)) {
             accessToken = this.jwtService.sign({ id })
             this.setToken(accessToken, res);
             return { accessToken };

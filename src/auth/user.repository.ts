@@ -6,20 +6,28 @@ import { User } from "./user.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    async createUser(createUserDTO: CreateUserDTO) {        
-        await this.save(createUserDTO)
+    createUser(createUserDTO: CreateUserDTO) {        
+        this.save(createUserDTO)
     }
 
-    async findByUserId(userId: string): Promise<User> {
-        return await this.findOne({userId});
+    findById(id: number) {
+        return this.findOne({ id })
     }
 
-    async updateUser(id: number, updateUserDTO: UpdateUserDTO) {
+    findByUserId(userId: string): Promise<User> {
+        return this.findOne({ userId });
+    }
+
+    updateUser(id: number, updateUserDTO: UpdateUserDTO) {
         this.update(id,updateUserDTO);
     }
 
-    async deleteUser(loginDTO: LoginDTO) {
+    deleteUser(loginDTO: LoginDTO) {
 
+    }
+
+    async getPassword(userId: string): Promise<string> {
+        return (await this.createQueryBuilder('user').select(['user.password']).where("user.userId = :userId", { userId }).getOne()).password;
     }
 
 }
