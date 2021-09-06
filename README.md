@@ -145,6 +145,33 @@ constructor(
 export class UpdateCatDto extends PartialType(CreateCatDto) {}
 ```
 
+### Module의 정체
+
+의존성을 관리하는(제어를 해주는) 객체 ⇒ IoC Container ⇒ Inversion of Control ⇒ 제어의 역전
+Module의 구성
+
+```tsx
+@Module({
+  controllers: [CatsController], // 서비스를 필요로 하는 소비자들
+  providers: [CatsService,DogsService], // 서비스를 제공하는 제공자들
+})
+
+// 사실 providers의 구성은 축약된 코드였다..
+// 원래는 이렇게 생겼다.
+providers: [
+  {
+    provide: CatsService, // 이 이름으로 인스턴스를 제공할거야
+    useClass: CatsService, // 이녀석을 이용해서 인스턴스를 만들거야
+  },
+  {
+    provide: DogsService, // 이 이름으로 인스턴스를 제공할거야
+    useClass: DogsService, // 이녀석을 이용해서 인스턴스를 만들거야
+  },
+];
+```
+
+[네스트JS 한국어 매뉴얼 사이트](https://docs.nestjs.kr/fundamentals/custom-providers)
+
 - Where should i handle Exception Error
   [일단 컨트롤러에서 처리하자](https://stackoverflow.com/questions/29731353/what-are-the-best-practices-to-handle-exception-at-controller-service-and-dao-l)
 
