@@ -145,7 +145,7 @@ constructor(
 export class UpdateCatDto extends PartialType(CreateCatDto) {}
 ```
 
-### Module의 정체
+- Module의 정체
 
 의존성을 관리하는(제어를 해주는) 객체 ⇒ IoC Container ⇒ Inversion of Control ⇒ 제어의 역전
 Module의 구성
@@ -171,6 +171,15 @@ providers: [
 ```
 
 [네스트JS 한국어 매뉴얼 사이트](https://docs.nestjs.kr/fundamentals/custom-providers)
+
+- DI
+    - 모듈의 의존성을 외부 개체에 의해 입력으로 전달 받는 것
+        - authController는 authService를 *전달 받아서 사용한다. 출처와 구현사항은 알 필요 없이 그냥 필요한것을 얻는데 사용한다.
+    - [https://jsqna.com/ndp-7-dependency-injection-1/](https://jsqna.com/ndp-7-dependency-injection-1/)
+    - 설계에 필요한 이유: 각 코드의 역할이 명확하므로 유지보수에 유리함
+- 의존성 제어 역전
+	- 의존성 관리를 프로그램에 맡기는 것
+    - NestJS없이 제어 역전?
 
 - Where should i handle Exception Error
   [일단 컨트롤러에서 처리하자](https://stackoverflow.com/questions/29731353/what-are-the-best-practices-to-handle-exception-at-controller-service-and-dao-l)
