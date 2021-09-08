@@ -16,6 +16,8 @@
 
 ## Question List & Memo
 
+- 절대경로 설정
+
 - single responsibility principle !
   - 하나의 책임을 가진 객체들
   - 서비스는 각 객체에게 필요한 것을 요청해서 복잡한 로직을 처리한다.

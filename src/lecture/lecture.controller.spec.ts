@@ -1,49 +1,42 @@
 import { TestingModule, Test } from "@nestjs/testing";
+import { AuthModule } from "src/auth/auth.module";
+import { ParamUser } from "src/auth/user.decorator";
 import { LectureController } from "./lecture.controller";
-import { Lecture } from "./lecture.entity";
-import { LectureRepository } from "./lecture.repository";
 import { LectureService } from "./lecture.service";
 
 
 // Test Class
 describe('lecture Controller', () => {
     let controller: LectureController;
-    let service = new LectureService(new(class extends LectureRepository{})()).getAll = jest.fn();
-    // beforeEach(async () => {
-    //     const moduleRef: TestingModule = await Test.createTestingModule({
-    //         imports: [ 
-    //         ],
-    //         controllers: [ LectureController ],
-    //         providers:[ LectureService ]
-    //     })
-    //     .overrideProvider(LectureService)
-    //     .useValue('a')
-    //     .compile();
-    //     controller = moduleRef.get<LectureController>(LectureController);
-    // })
-
-    it('should return a lecture', () => {
-        controller = new LectureController(service());
-        expect(controller).toBeDefined();
+    beforeEach(async () => {
+        const moduleRef: TestingModule = await Test.createTestingModule({
+            imports: [
+                AuthModule
+            ],
+            controllers: [LectureController],
+            providers: [
+                { 
+                    provide: LectureService,
+                    useValue: {
+                        getAllLectures: jest.fn()
+                    }
+                },
+                {
+                    provide: ParamUser,
+                    useValue: {
+                            id:'',
+                    }
+                }
+            ],
+        })
+        .compile();
+        controller = moduleRef.get<LectureController>(LectureController);
+        let service = moduleRef.get<LectureService>(LectureService);        
     })
 
-    // it('should be defined', async () => {
-    //     let lecture = new Lecture();
-    //     lecture.id = 1;
-    //     const service = new (class extends LectureService {
-    //         constructor(){
-    //             super(null)
-    //         }
-            
-    //         getById(id: number): Promise<Lecture> {
-    //             return Promise.resolve(lecture);
-    //         }
-    //     })();
-    //     console.log(controller.getById(1));
-        
-    //     controller = new LectureController(service);
-    //     expect(controller).toBeDefined();
-    // })
+    it('should return a lecture', () => {
+        expect(controller).toBeDefined();
+    })
 })
 
 // expect(controller.getById(1)).toBe({
