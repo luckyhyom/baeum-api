@@ -8,12 +8,11 @@ import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
 import { LectureService } from './lecture.service';
 @Controller('lecture')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class LectureController {
     constructor(private lectureService: LectureService) {}
 
     @Get()
-
     getAllLectures(@Req() request: Request): Promise<Lecture[]> {
         console.log(request.cookies);
         return this.lectureService.getAll();
