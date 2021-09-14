@@ -22,3 +22,9 @@ export class CreateLectureDto {
     @IsBoolean()
     readonly viewStatus: boolean;
 }
+
+/**
+ * read-only
+ * IoC 컨테이너에 의해 자동으로 인스턴스가 생성될때 값이 할당되며
+ * 이후에 임의로 값을 수정 할 수 없다.
+ */
