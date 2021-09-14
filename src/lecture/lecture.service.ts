@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
+import { Lecture } from './lecture.entity';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 import { UpdateLectureDto } from './dto/update-lecture.dto';
-import { Lecture } from './lecture.entity';
+import { LectureSearchRequest } from './dto/lecture-search-request.dto';
+import { LectureSearchResponse } from './dto/lecture-search-response.dto';
 import { LectureRepository } from './lecture.repository';
+import { Page } from 'src/pagination/Page';
 @Injectable()
 export class LectureService {
 
@@ -23,8 +25,10 @@ export class LectureService {
         return result;
     }
 
-    getByTitle(title: string): Promise<Lecture> {
-        return this.lectureRepository.getByTitle(title);
+    async search(queryString: LectureSearchRequest): Promise<Page<LectureSearchResponse>> {
+        const lectures = await this.lectureRepository.paging(queryString)
+        // DB에서 가져온 데이터를 그대로 보내지 않고, DTO를 정의하여 데이터를 적절하게 가공한다.
+        return new Page<LectureSearchResponse>(lectures[1],queryString.getLimit(),lectures[0].map(lecture => new LectureSearchResponse(lecture)));
     }
 
     getById(id: number): Promise<Lecture> {
