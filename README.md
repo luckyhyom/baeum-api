@@ -7,7 +7,6 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 여러 강의를 들으며 지속적으로 리팩토링 하게 될 학습형 프로젝트 입니다.
 
@@ -17,6 +16,21 @@
 ## Question List & Memo
 
 - 절대경로 설정
+``` tsx
+	// package.json
+	"rootDir": "src",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>$1"
+    }
+```
+``` tsx
+  // jest-e2e-.json
+  "rootDir": ".",
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1"
+  }
+```
+
 
 - single responsibility principle !
   - 하나의 책임을 가진 객체들
