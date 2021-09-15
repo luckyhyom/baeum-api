@@ -15,13 +15,13 @@
 
 ## Question List & Memo
 
-- 절대경로 설정
+### Jest 절대경로 설정
 ``` tsx
-	// package.json
-	"rootDir": "src",
-    "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>$1"
-    }
+  // package.json
+  "rootDir": "src",
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>$1"
+  }
 ```
 ``` tsx
   // jest-e2e-.json
@@ -32,17 +32,101 @@
 ```
 
 
-- single responsibility principle !
+### single responsibility principle !
   - 하나의 책임을 가진 객체들
   - 서비스는 각 객체에게 필요한 것을 요청해서 복잡한 로직을 처리한다.
 
-- Type? Interface? Class?
+### Type? Interface? Class?
   - type: 데이터 정의,
   - interface: 클래스 규격사항 정의
   - class: NestJS에서 DTO를 만들때 권장됨
 
-- Authentication ( jwt와 bcrypt를 어떻게 응용 할 것이냐 )
-    - 세션 / 쿠키 / 캐시
+### 초기 MVC 패턴
+Request(요청)를 받는 순서, 응답 할 때는 역순이다.
+1. View
+    - UI (User Interface): 버튼, 등의 유저에게 제공되는 컨트롤러
+2. Controller 
+    - View와 model 사이의 중개자.
+    - view의 요청을 수행할 적절한 Model을 찾아서 값을 받고 그 값을 view에게 전달.
+    - 중간에서 유효성검사
+3. Model
+
+   - **DAO**
+      - DB 쿼리문과 비즈니스 로직을 둘 다 가지고 있으며 후에 DAO, Service로 분리됨
+      - 하나의 테이블에 하나의 DAO (UserDAO, BoardDAO)
+
+   - **VO**
+     - 테이블의 컬럼 값을 담아서 객체로 다루기 위해 사용
+
+
+
+### MVC 패턴 + Service
+
+역할을 세분화 하여 구조를 더 나누고 있다. 따라서 구조의 계층이 점점 늘어난다.
+
+**View (브라우저 UI)**
+
+1. View → Router
+    - UI 에서 서버의 Router에 요청을 보낸다.
+
+**Server에 요청이 전달된다.**
+
+1. Controller
+    - Router의 역할을 한다. (서버에서는 UI가 없기에 View의 역할을 Router가 한다.)
+        - 즉, view의 요청을 적절한 Service에게 넘겨 반환된 값을 다시 View에 넘긴다.
+    - Request, Response 객체를 그대로 넘기지 않고 필요한 데이터가 규격화된 DTO를 Service에 전달
+        - View와 Model을 분리하는 과정
+        - 유효성검사 (더 나아가면 이를 위한 Pipe, Guard 등의 계층이 추가된다.)
+        - Pipe,Guard에서 리퀘스트 데이터를 가공하여 넘겨받으면 해당 과정이 생략되기도 한다.
+            - ex) queryString에 RequestDTO타입을 적용하여 유효성검사 했던 것처럼
+2. Service
+    - Model에서 분리된 구조, 비즈니스 로직을 담당한다.
+    - View에 종속적이지 않음
+        - 요청과 응답은 Controller에서만 작업하고 서비스에는 적절한 데이터가 담긴 DTO로 보내야함
+    - Repository에서 반환받은 Entity를 적절한 응답 데이터를 규격화한 DTO에 담아서 반환한다.
+3. Repository (DAO)
+    - Model에서 분리된 구조, DB 데이터에 관한 쿼리를 관리한다.
+    - 각 테이블 마다 1:1 맵핑된 Entity와, 쿼리를 실행하는 Repository를 가지고있다.
+    - DAO와 Repository는 차이가 있지만 같다고 봐도 무방하다고한다.
+        - Repository는 DDD에서 나온 개념이므로, 그때 다시 한번 보면 좀더 이해가 될 것 같다.
+        - Repository가 여러개의 DAO를 조합해서 사용할 수 있다고 한다.
+
+    Repository는 VO 또는 Entity를 반환한다.
+
+    **VO**
+
+    - 테이블의 컬럼 값을 담아서 객체로 다루기 위해 사용
+    - 객체 속성과 테이블 컬럼을 1:1 맵핑한다.
+    - 속성값으로 판별 (hashCode, equals) *나는 아직 VO 쓰임새에 대한 이해가 없다.
+
+    **Entity**
+
+    - ID로 판별, 로직을 가짐
+    - VO를 대체해도 되는걸로 현재 이해하고 있다.
+
+### **DTO**
+
+- 요청/응답을 할 때 전송되는 데이터에 대한 규격 & MVC계층간 데이터 교환용
+    - 요청: 들어오는 데이터에 대한 유효성검사
+    - 응답: DB데이터를 그대로 주는 것이 아닌 적절하게 가공하여 클라이언트에게 제공한다.
+    - 일반적으로 로직을 가지고있지 않음
+
+
+### **Active Record & Data Mapped**
+
+  - Active Record
+
+    - Entity로 DB데이터 CRUD, 쿼리 수행 (Repository 필요없음)
+
+  - Data Mapped
+
+    - Entity는 테이블과 1:1 맵핑될뿐 DB 기능과 상관 없이 객체 자체로 사용된다.
+  → 나는 이 부분 때문에 VO와 같은 것이라고 생각되는 것 같다.
+  ORM을 사용하면서도 쿼리를 좀더 한 곳에 배척시킬 수 있다.
+
+
+### Authentication ( jwt와 bcrypt를 어떻게 응용 할 것이냐 )
+   - 세션 / 쿠키 / 캐시
         1. 캐시는 브라우저의 빠른 렌더링을 위한 용도
             - 이미지, 오디오, 비디오 파일 등을 캐싱
             - 만료 기간이 없어 사용자가 직접 삭제 해야함
@@ -113,14 +197,8 @@
 
 - reflector ?
 
-- Model? entity? DTO? 따로 만들어야 하는건가?
-  1. nest에서 class사용을 권장함
-  2. entity가 아닌 dto를 주고 받아야 한다?
-  3. 유효성 검사를 한 DTO의 데이터로 Model을 완성시킨다?
-model(entity): DB와 1:1 매핑되는 데이터
-DTO: 데이터를 네트워크로 주고받을 때의 규격사항, 유효성 검사를 한다.
-
-- config 파일 만들기, 일반 ts파일에서 process.env 접근 안되는 이유?
+### config 파일 만들기
+일반 ts파일에서 process.env 접근 안되는 이유?
 1. process.env 접근하는 방법 (1)
 ```tsx
 import { ConfigModule } from '@nestjs/config'
@@ -151,17 +229,17 @@ constructor(
 
 ```
 
-- dotenv
+### dotenv
   - 운영체제 환경변수를 직접 설정하지 않아도 .env파일을 자동으로 읽어 설정해주는 라이브러리
   원래는 터미널에서 export DB_USER=hostname 설정 후에 process.env.DB_USER를 쓸 수 있다.
 
-- Mapped Type - Partial
+### Mapped Type - Partial
 ```tsx
 // 모든 속성이 선택사항으로 설정된 타입(클래스)을 반환
 export class UpdateCatDto extends PartialType(CreateCatDto) {}
 ```
 
-- Module의 정체
+### Module의 정체
 
 의존성을 관리하는(제어를 해주는) 객체 ⇒ IoC Container ⇒ Inversion of Control ⇒ 제어의 역전
 Module의 구성
@@ -188,14 +266,16 @@ providers: [
 
 [네스트JS 한국어 매뉴얼 사이트](https://docs.nestjs.kr/fundamentals/custom-providers)
 
-- DI
-    - 모듈의 의존성을 외부 개체에 의해 입력으로 전달 받는 것
-        - authController는 authService를 *전달 받아서 사용한다. 출처와 구현사항은 알 필요 없이 그냥 필요한것을 얻는데 사용한다.
-    - [https://jsqna.com/ndp-7-dependency-injection-1/](https://jsqna.com/ndp-7-dependency-injection-1/)
-    - 설계에 필요한 이유: 각 코드의 역할이 명확하므로 유지보수에 유리함
-- 의존성 제어 역전
-	- 의존성 관리를 프로그램에 맡기는 것
-    - NestJS없이 제어 역전?
+### DI
+ - 모듈의 의존성을 외부 개체에 의해 입력으로 전달 받는 것
+   - authController는 authService를 *전달 받아서 사용한다. 출처와 구현사항은 알 필요 없이 그냥 필요한것을 얻는데 사용한다.
+ - [https://jsqna.com/ndp-7-dependency-injection-1/](https://jsqna.com/ndp-7-dependency-injection-1/)
+ - 설계에 필요한 이유: 각 코드의 역할이 명확하므로 유지보수에 유리함
+### 의존성 제어 역전
+- 의존성 관리를 프로그램에 맡기는 것
+- NestJS없이 제어 역전?
+
+### 기타
 
 - Where should i handle Exception Error
   [일단 컨트롤러에서 처리하자](https://stackoverflow.com/questions/29731353/what-are-the-best-practices-to-handle-exception-at-controller-service-and-dao-l)
@@ -216,10 +296,6 @@ providers: [
 
 - 변수명 수정하기가 번거롭다.
 status: string을 viewStatus: boolean으로 변경하기 위한 과정이 번거롭다.
-
-- service와 repository 차이
-repository: db에 접근하는 객체
-service: 비즈니스 로직 실행 객체
 
 - updateDTO request 아무값 넣지 않았을때 에러처리 하는 방법
 
