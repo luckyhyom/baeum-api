@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
+import { Lecture } from 'src/lecture/lecture.entity';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -15,10 +16,11 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('Get all [GET /lecture]', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .get('/lecture')
+      .then(lectures => {
+        expect(lectures).toMatchObject(Promise.resolve([Lecture]))
+      })
   });
 });
