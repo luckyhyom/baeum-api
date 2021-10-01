@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  baeumdb:
+    image: postgres
+    env_file:
+      - ./.env
+    container_name: postgres
+    restart: always
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile-baeum
+    env_file:
+      - ./.env
+    depends_on:
+      - baeumdb
+    ports:
+      - "3000:3000"
+    command:
+      - bash
+      - -c
+      - |
+        /app/wait-for-it.sh baeumdb:5432 -t 10
+        npm run start
+    container_name: nestjs-api
+    restart: always

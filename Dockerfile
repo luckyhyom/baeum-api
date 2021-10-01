@@ -34,11 +34,3 @@ EXPOSE 3000
 
 # Node ENV
 ENV NODE_ENV=production
-
-# env 파일 읽는법?
-ENV DB_HOST postgres
-ENV HOST_PORT 5432
-ENV DB_USER postgres
-ENV DB_PASSWORD test
-ENV DB_DATABASE baeum-api
-ENV CSRF_PASSWORD test
