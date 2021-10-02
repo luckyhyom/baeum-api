@@ -1,12 +1,37 @@
 version: "3"
 
 services:
+  nginxproxy:
+    depends_on:
+      - nginx
+      - baeumdb
+    image: nginx:alpine
+    container_name: proxyserver
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot-etc:/etc/letsencrypt
+      - ./myweb:/usr/share/nginx/html
+
+  nginx:
+    image: nginx:latest
+    container_name: mywebserver
+    restart: always
+    volumes:
+      - ./myweb:/usr/share/nginx/html
+
   baeumdb:
     image: postgres
     env_file:
       - ./.env
     container_name: postgres
     restart: always
+    volumes:
+      - mydb:/var/lib/postgresql
+
   app:
     build:
       context: ./
@@ -15,8 +40,6 @@ services:
       - ./.env
     depends_on:
       - baeumdb
-    ports:
-      - "3000:3000"
     command:
       - bash
       - -c
@@ -25,3 +48,16 @@ services:
         npm run start
     container_name: nestjs-api
     restart: always
+
+  certbot:
+    depends_on:
+      - nginxproxy
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot-etc:/etc/letsencrypt
+      - ./myweb:/usr/share/nginx/html
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email gyals0386@gmail.com --agree-tos --no-eff-email --keep-until-expiring -d makevalue.net -d www.makevalue.net
+
+volumes:
+  mydb:
