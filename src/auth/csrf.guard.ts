@@ -9,10 +9,10 @@ export class CSRFGuard implements CanActivate {
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
-        return this.checkCRSFToken(request)
+        return this.checkCSRFToken(request)
     }
 
-    checkCRSFToken(request) {
+    checkCSRFToken(request) {
         if (
             request.method === 'GET' ||
             request.method === 'OPTIONS' ||
@@ -20,10 +20,11 @@ export class CSRFGuard implements CanActivate {
         ) { 
             return true;
         }
-        return this.validateCRSFToken(request.headers['csrf_token']);
+        // console.log(request);
+        return this.validateCSRFToken(request.headers['csrf_token']);
     }
     
-    async validateCRSFToken(crsfToken: string): Promise<boolean> {
-        return await bcrypt.compare(config.csrf.password, crsfToken);
+    async validateCSRFToken(csrfToken: string): Promise<boolean> {
+        return await bcrypt.compare(config.csrf.password, csrfToken);
     }
 }
