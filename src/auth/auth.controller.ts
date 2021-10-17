@@ -28,9 +28,10 @@ export class AuthController {
         this.authService.updateUser(updateUserDTO);
     }
 
-    @Post()
-    logout() {
-        this.authService.logout();
+    @Post('logout')
+    logout(@Res({passthrough: true})res: Response) {
+        res.clearCookie('token')
+        return { message: 'logged out' };
     }
 
     @Delete()
