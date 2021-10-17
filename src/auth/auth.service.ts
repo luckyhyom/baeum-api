@@ -20,7 +20,7 @@ export class AuthService {
 
     async signup(createUserDTO: CreateUserDTO) {
         
-        if (this.userRepository.findByUserId(createUserDTO.userId)) {
+        if (await this.userRepository.findByUserId(createUserDTO.userId)) {
             throw new Error("already exists");
         }
 
@@ -71,8 +71,6 @@ export class AuthService {
     }
 
     async me() {
-        // 요청에 포함된 jwt를 검사하는 역할
-        // 2개가 있던걸로 기억하는데.
     }
 
     async hashValue(password: string): Promise<string> {
