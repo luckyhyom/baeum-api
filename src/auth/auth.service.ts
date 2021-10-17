@@ -89,6 +89,6 @@ export class AuthService {
     }
 
     async createCSRFToken() {
-        return await bcrypt.hash(config.csrf.password,1);
+        return bcrypt.hash(config.csrf.password,1);
     }
 }

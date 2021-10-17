@@ -35,7 +35,8 @@ export class AuthController {
     }
 
     @Get('csrf-token')
-    getCSRFToken() {
-        return this.authService.createCSRFToken();
+    async getCSRFToken() {
+        const csrfToken = await this.authService.createCSRFToken()
+        return { csrfToken };
     }
 }
