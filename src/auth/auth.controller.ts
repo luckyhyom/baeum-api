@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Patch, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
+import { LoginResponse } from './dto/login-response.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { LoginDTO } from './dto/user.dto';
 
@@ -15,7 +16,7 @@ export class AuthController {
     }
 
     @Post('login')
-    login(@Body() loginDTO: LoginDTO, @Res({passthrough: true}) res: Response) {
+    login(@Body() loginDTO: LoginDTO, @Res({passthrough: true}) res: Response): Promise<LoginResponse> {
         return this.authService.login(loginDTO, res);
     }
 

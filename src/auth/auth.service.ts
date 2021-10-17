@@ -8,6 +8,7 @@ import * as bcrypt from 'bcryptjs'
 import { JwtService } from '@nestjs/jwt';
 import { CookieOptions, Response } from 'express';
 import config from 'src/configs/config';
+import { LoginResponse } from './dto/login-response.dto';
 
 const salt = 10;
 @Injectable()
@@ -35,7 +36,7 @@ export class AuthService {
         return 'good'
     }
 
-    async login(loginDTO: LoginDTO, res: Response) {
+    async login(loginDTO: LoginDTO, res: Response): Promise<LoginResponse> {
         // 아이디 유무 확인
         const { userId, password } = loginDTO;
         const { id, name } = await this.userRepository.findByUserId(userId);
@@ -46,11 +47,11 @@ export class AuthService {
         const targetPassword = await this.userRepository.getPassword(userId);
 
         // 패스워드 검증
-        let accessToken;
+        let token;
         if (await bcrypt.compare(password, targetPassword)) {
-            accessToken = this.jwtService.sign({ id })
-            this.setToken(accessToken, res);
-            return { accessToken, name };
+            token = this.jwtService.sign({ id })
+            this.setToken(token, res);
+            return { token, name };
         }
     }
 
@@ -77,7 +78,7 @@ export class AuthService {
         return await bcrypt.hash(password, salt)
     }
 
-    setToken(accessToken: string, res: Response) {
+    setToken(token: string, res: Response) {
         // brower should have credentials: 'include' option.
         const options: CookieOptions = {
             maxAge: 60 * 60 * 2 * 1000,
@@ -85,7 +86,7 @@ export class AuthService {
             sameSite: 'none',
             secure: true
         };
-        res.cookie('token', accessToken, options)
+        res.cookie('token', token, options)
     }
 
     async createCSRFToken() {
