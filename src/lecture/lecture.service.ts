@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/auth/user.entity';
 import { Lecture } from './lecture.entity';
+import { JwtDTO } from 'src/auth/dto/jwt.dto';
 import { CreateLectureDto } from './dto/create-lecture.dto';
 import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { LectureSearchRequest } from './dto/lecture-search-request.dto';
@@ -20,7 +20,7 @@ export class LectureService {
         return  this.lectureRepository.getAll();
     }
 
-    create(data: CreateLectureDto, user: User): Promise<Lecture> {
+    create(data: CreateLectureDto, user: JwtDTO): Promise<Lecture> {
         const result = this.lectureRepository.createOne(data,user);
         return result;
     }

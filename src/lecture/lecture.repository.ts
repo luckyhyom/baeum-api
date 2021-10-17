@@ -1,5 +1,5 @@
-import { User } from "src/auth/user.entity";
 import { createQueryBuilder, EntityRepository, Repository } from "typeorm";
+import { JwtDTO } from "src/auth/dto/jwt.dto";
 import { CreateLectureDto } from "./dto/create-lecture.dto";
 import { LectureSearchRequest } from "./dto/lecture-search-request.dto";
 import { UpdateLectureDto } from "./dto/update-lecture.dto";
@@ -22,7 +22,7 @@ export class LectureRepository extends Repository<Lecture> {
 
     }
 
-    async createOne(data: CreateLectureDto, user: User): Promise<Lecture> {
+    async createOne(data: CreateLectureDto, user: JwtDTO): Promise<Lecture> {
         const result = await this.create({ ...data, user: { id: user.id } });
         await this.save(result);
         return result;
