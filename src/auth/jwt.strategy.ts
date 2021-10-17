@@ -3,46 +3,56 @@ import { PassportStrategy } from "@nestjs/passport";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Strategy } from "passport-jwt";
 import { UserRepository } from "./user.repository";
+import { JwtDTO } from "./dto/jwt.dto";
+
+let token;
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(
         @InjectRepository(UserRepository)
         private userRepository: UserRepository
     ) {
+        /**
+         * ExtractJwt의 함수는 리퀘스트를 받아서 jwt를 추출하고 반환한다.
+         * jwtFromRequest는 리퀘스트를 인자로 넣어주나보다.
+         */ 
         super({
             secretOrKey: 'test',
             ignoreExpiration: false,
-            /**
-             * extract jwt from cookie using UseGuards
-             * cookie는 request에서 추출하는 것이고
-             * ExtractJwt의 함수는 리퀘스트를 받아서 처리해주고 jwt를 반환해주는 역할.
-             * jwtFromRequest는 리퀘스트를 인자로 넣어주나보다.
-             */ 
             jwtFromRequest: cookieExtractor,
         })
     }
 
     /**
+     * @param payload
+     * @returns `JwtDTO`
      * 
-     * @param payload 
-     * @returns 
-     * this class named isAuth used to add token and username to the request and return it.
-     * this nestjs validator is called by useGuards()
-     * this add information to the request that this received and return it as a middleware
-     * 
-     * how to extract values in request?
-     * use createParameterDecorator
-     * 
+     * super() 함수는 토큰 유효성 검사 통과하면 토큰에 들어있는 데이터를 반환
+     * validate는 데이터를 받아서 user객체에 담아 request에 추가한다. (createParameterDecorator 참고)
      */
-    async validate(payload: any) {
-        return payload;
+    async validate(payload: any): Promise<JwtDTO> {
+        
+        if(!await this.checkUserId(payload.id)) {
+            throw new Error(`You are not a registered member.`);
+        }
+
+        return {
+            token,
+            id: payload.id,
+        };
     }
+
+    async checkUserId(id) {
+        return await this.userRepository.findById(id);
+    }
+
 }
-var cookieExtractor = function(req) {
-    var token = null;
+const cookieExtractor = function(req) {
+    let result = null;
     if (req && req.cookies) {
-        token = req.cookies['token'] || req.header;
+        result = req.cookies['token'] || req.header;
+        token = result
     }
-    return token;
+    return result;
 };
 
