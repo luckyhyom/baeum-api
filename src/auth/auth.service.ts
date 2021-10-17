@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CookieOptions, Response } from 'express';
 import config from 'src/configs/config';
 import { LoginResponse } from './dto/login-response.dto';
+import { JwtDTO } from './dto/jwt.dto';
 
 const salt = 10;
 @Injectable()
@@ -71,7 +72,11 @@ export class AuthService {
         // this.delete()
     }
 
-    async me() {
+    async me(user: JwtDTO): Promise<LoginResponse> {
+        return {
+            name: (await this.userRepository.findById(user.id)).name,
+            token: user.token
+        }
     }
 
     async hashValue(password: string): Promise<string> {
