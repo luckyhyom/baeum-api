@@ -21,7 +21,6 @@ export class AuthService {
     ) {}
 
     async signup(createUserDTO: CreateUserDTO) {
-        
         if (await this.userRepository.findByUserId(createUserDTO.userId)) {
             throw new Error("already exists");
         }
@@ -37,23 +36,29 @@ export class AuthService {
         return 'good'
     }
 
-    async login(loginDTO: LoginDTO, res: Response): Promise<LoginResponse> {
-        // 아이디 유무 확인
-        const { userId, password } = loginDTO;
-        const { id, name } = await this.userRepository.findByUserId(userId);
+    async login(data: LoginDTO, res: Response): Promise<LoginResponse> {
+        const { id, name } = await this.userRepository.findByUserId(data.userId);
+
         if (!id) {
             throw new Error("no user");
         }
-        
-        const targetPassword = await this.userRepository.getPassword(userId);
 
-        // 패스워드 검증
         let token;
-        if (await bcrypt.compare(password, targetPassword)) {
+        if (await this.comparePassword(data)) {
             token = this.jwtService.sign({ id })
             this.setToken(token, res);
             return { token, name };
+        } else {
+            throw new Error('wrong password!')
         }
+    }
+    
+    async comparePassword(data) {
+        return bcrypt.compare(data.password, await this.getOriginalPassword(data.userId))
+    }
+
+    async getOriginalPassword(userId) {
+        return await this.userRepository.getPassword(userId);
     }
 
     updateUser(updateUserDTO: UpdateUserDTO) {
