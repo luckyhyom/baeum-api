@@ -28,5 +28,5 @@ export class CreateUserDTO {
     @IsUrl()
     @IsString()
     @IsOptional()
-	photoURL: string;
+	photoURL: string = 'www.makevalue.net';
 }

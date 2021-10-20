@@ -14,8 +14,8 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('signup')
-    signup(@Body() createUserDTO: CreateUserDTO) {
-        this.authService.signup(createUserDTO);
+    signup(@Body() createUserDTO: CreateUserDTO, @Res({passthrough: true}) res: Response) {
+        return this.authService.signup(createUserDTO, res);
     }
 
     @Post('login')

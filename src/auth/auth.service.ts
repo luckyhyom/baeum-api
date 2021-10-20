@@ -20,20 +20,20 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    async signup(createUserDTO: CreateUserDTO) {
+    async signup(createUserDTO: CreateUserDTO, res: Response) {
         if (await this.userRepository.findByUserId(createUserDTO.userId)) {
             throw new Error("already exists");
         }
 
-        try {
-            this.userRepository.createUser({
-                ...createUserDTO,
-                password: await this.hashValue(createUserDTO.password)
-            }); 
-        } catch (error) {
-            console.log(error);
-        }
-        return 'good'
+        const { id, name } = await this.userRepository.createUser({
+            ...createUserDTO,
+            password: await this.hashValue(createUserDTO.password)
+        });
+
+        let token;
+        token = this.jwtService.sign({ id })
+        this.setToken(token, res);
+        return { token, name };
     }
 
     async login(data: LoginDTO, res: Response): Promise<LoginResponse> {
@@ -65,11 +65,7 @@ export class AuthService {
         // jwt 검증
         // 정보 변경
     }
-
-    logout() {
-
-    }
-
+    
     deleteUser(deleteUserDTO: LoginDTO) {
         // 패스워드 검증
         // jwt 검증

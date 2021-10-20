@@ -6,8 +6,8 @@ import { User } from "./user.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    createUser(createUserDTO: CreateUserDTO) {        
-        this.save(createUserDTO)
+    async createUser(createUserDTO: CreateUserDTO) {        
+        return await this.save(createUserDTO)
     }
 
     findById(id: number) {
