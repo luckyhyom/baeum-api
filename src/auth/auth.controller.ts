@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Patch, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Body, Controller, Delete, Get, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
+import { AmazonS3FileInterceptor } from 'nestjs-multer-extended';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { JwtDTO } from './dto/jwt.dto';
@@ -49,5 +50,16 @@ export class AuthController {
     async getCSRFToken() {
         const csrfToken = await this.authService.createCSRFToken()
         return { csrfToken };
+    }
+
+    @Post('image')
+    @UseInterceptors(
+        AmazonS3FileInterceptor('image', {
+        dynamicPath: 'profile'
+        }),
+    )
+    uploadFile(@UploadedFile() file) {
+        console.log(file);
+        return { location: file.Location }
     }
 }
