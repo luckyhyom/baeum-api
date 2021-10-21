@@ -20,12 +20,12 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    async signup(createUserDTO: CreateUserDTO, res: Response) {
+    async signup(createUserDTO: CreateUserDTO, res: Response): Promise<LoginResponse> {
         if (await this.userRepository.findByUserId(createUserDTO.userId)) {
             throw new Error("already exists");
         }
 
-        const { id, name } = await this.userRepository.createUser({
+        const { id, name, profileImageURL } = await this.userRepository.createUser({
             ...createUserDTO,
             password: await this.hashValue(createUserDTO.password)
         });
@@ -33,11 +33,11 @@ export class AuthService {
         let token;
         token = this.jwtService.sign({ id })
         this.setToken(token, res);
-        return { token, name };
+        return { token, name, profileImageURL };
     }
 
     async login(data: LoginDTO, res: Response): Promise<LoginResponse> {
-        const { id, name } = await this.userRepository.findByUserId(data.userId);
+        const { id, name, profileImageURL } = await this.userRepository.findByUserId(data.userId);
 
         if (!id) {
             throw new Error("no user");
@@ -47,7 +47,7 @@ export class AuthService {
         if (await this.comparePassword(data)) {
             token = this.jwtService.sign({ id })
             this.setToken(token, res);
-            return { token, name };
+            return { token, name, profileImageURL };
         } else {
             throw new Error('wrong password!')
         }
@@ -74,8 +74,10 @@ export class AuthService {
     }
 
     async me(user: JwtDTO): Promise<LoginResponse> {
+        const { name, profileImageURL } = await this.userRepository.findById(user.id);
         return {
-            name: (await this.userRepository.findById(user.id)).name,
+            name,
+            profileImageURL,
             token: user.token
         }
     }
