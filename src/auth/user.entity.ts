@@ -23,7 +23,7 @@ export class User extends BaseEntity {
     @Column()
 	email: string;
 
-    @Column()
+    @Column({default: 'https://baeum.s3.ap-northeast-2.amazonaws.com/baeumFiles/profile/PngItem_1468479.png'})
 	photoURL: string;
 
     @Column({default: 0})

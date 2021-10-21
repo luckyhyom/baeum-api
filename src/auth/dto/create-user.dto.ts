@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsUrl, Length, Max, Min } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
 
 export class CreateUserDTO {
     @Length(8,14)
@@ -24,9 +24,4 @@ export class CreateUserDTO {
     @IsEmail()
     @IsNotEmpty()
 	email: string;
-
-    @IsUrl()
-    @IsString()
-    @IsOptional()
-	photoURL: string = 'www.makevalue.net';
 }
