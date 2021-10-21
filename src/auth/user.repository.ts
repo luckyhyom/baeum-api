@@ -18,8 +18,8 @@ export class UserRepository extends Repository<User> {
         return this.findOne({ userId });
     }
 
-    updateUser(id: number, updateUserDTO: UpdateUserDTO) {
-        this.update(id,updateUserDTO);
+    updateUser(id: number, newData: UpdateUserDTO) {
+        return this.update(id,newData);
     }
 
     deleteUser(loginDTO: LoginDTO) {

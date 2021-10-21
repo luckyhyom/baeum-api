@@ -1,5 +1,7 @@
 export class LoginResponse {
-    name: string
     token: string
+    name: string
+    about: string
+    email: string
     profileImageURL: string
 }

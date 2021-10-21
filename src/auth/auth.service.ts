@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -22,10 +22,10 @@ export class AuthService {
 
     async signup(createUserDTO: CreateUserDTO, res: Response): Promise<LoginResponse> {
         if (await this.userRepository.findByUserId(createUserDTO.userId)) {
-            throw new Error("already exists");
+            throw new HttpException('이미 존재하는 아이디입니다.', HttpStatus.CONFLICT);
         }
 
-        const { id, name, profileImageURL } = await this.userRepository.createUser({
+        const { id, name, about, email, profileImageURL } = await this.userRepository.createUser({
             ...createUserDTO,
             password: await this.hashValue(createUserDTO.password)
         });
@@ -33,11 +33,11 @@ export class AuthService {
         let token;
         token = this.jwtService.sign({ id })
         this.setToken(token, res);
-        return { token, name, profileImageURL };
+        return { token, name, about, email, profileImageURL };
     }
 
     async login(data: LoginDTO, res: Response): Promise<LoginResponse> {
-        const { id, name, profileImageURL } = await this.userRepository.findByUserId(data.userId);
+        const { id, name, about, email, profileImageURL } = await this.userRepository.findByUserId(data.userId);
 
         if (!id) {
             throw new Error("no user");
@@ -47,7 +47,7 @@ export class AuthService {
         if (await this.comparePassword(data)) {
             token = this.jwtService.sign({ id })
             this.setToken(token, res);
-            return { token, name, profileImageURL };
+            return { token, name, about, email, profileImageURL };
         } else {
             throw new Error('wrong password!')
         }
@@ -61,9 +61,16 @@ export class AuthService {
         return await this.userRepository.getPassword(userId);
     }
 
-    updateUser(updateUserDTO: UpdateUserDTO) {
-        // jwt 검증
-        // 정보 변경
+    async updateUser(user:JwtDTO ,newData: UpdateUserDTO): Promise<LoginResponse> {
+        await this.userRepository.updateUser(user.id, newData);
+        const { id, name, about, email, profileImageURL } = await this.userRepository.findById(user.id);
+        return {
+            token: user.token,
+            name,
+            about,
+            email,
+            profileImageURL
+        }
     }
     
     deleteUser(deleteUserDTO: LoginDTO) {
@@ -74,11 +81,13 @@ export class AuthService {
     }
 
     async me(user: JwtDTO): Promise<LoginResponse> {
-        const { name, profileImageURL } = await this.userRepository.findById(user.id);
+        const { name, about, email, profileImageURL } = await this.userRepository.findById(user.id);
         return {
+            token: user.token,
             name,
+            about,
+            email,
             profileImageURL,
-            token: user.token
         }
     }
 

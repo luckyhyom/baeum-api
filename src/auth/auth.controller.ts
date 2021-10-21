@@ -25,8 +25,9 @@ export class AuthController {
     }
 
     @Patch()
-    updateUser(@Body() updateUserDTO: UpdateUserDTO) {
-        this.authService.updateUser(updateUserDTO);
+    @UseGuards(AuthGuard('jwt'))
+    updateUser(@ParamUser() user: JwtDTO, @Body() newData: UpdateUserDTO): Promise<LoginResponse> {
+        return this.authService.updateUser(user, newData);
     }
 
     @Post('logout')
