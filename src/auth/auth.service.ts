@@ -10,6 +10,7 @@ import { CookieOptions, Response } from 'express';
 import config from 'src/configs/config';
 import { LoginResponse } from './dto/login-response.dto';
 import { JwtDTO } from './dto/jwt.dto';
+import { ProfileImage } from './dto/profileImage.dto';
 
 const salt = 10;
 @Injectable()
@@ -71,6 +72,16 @@ export class AuthService {
             email,
             profileImageURL
         }
+    }
+
+    async uploadProfileImageURL(id: number, profileImageURL: string): Promise<ProfileImage> {
+        const user = await this.userRepository.findById(id);
+        if(!user) {
+            throw new HttpException('No User', HttpStatus.FORBIDDEN)
+        }
+        await this.userRepository.updateUser(id, { profileImageURL });
+
+        return { profileImageURL }
     }
     
     deleteUser(deleteUserDTO: LoginDTO) {

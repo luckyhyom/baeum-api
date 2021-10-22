@@ -3,6 +3,7 @@ import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { LoginDTO } from "./dto/login.dto";
 import { User } from "./user.entity";
+import { ProfileImage } from "./dto/profileImage.dto";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -18,8 +19,8 @@ export class UserRepository extends Repository<User> {
         return this.findOne({ userId });
     }
 
-    updateUser(id: number, newData: UpdateUserDTO) {
-        return this.update(id,newData);
+    updateUser(id: number, newData: UpdateUserDTO | ProfileImage) {
+        return this.update(id, { ...newData });
     }
 
     deleteUser(loginDTO: LoginDTO) {

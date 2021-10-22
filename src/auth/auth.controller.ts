@@ -9,6 +9,7 @@ import { LoginResponse } from './dto/login-response.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { LoginDTO } from './dto/login.dto';
 import { ParamUser } from './user.decorator';
+import { ProfileImage } from './dto/profileImage.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -54,13 +55,14 @@ export class AuthController {
     }
 
     @Post('image')
+    @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(
         AmazonS3FileInterceptor('image', {
         dynamicPath: 'profile'
         }),
     )
-    uploadFile(@UploadedFile() file) {
+    uploadFile(@ParamUser() user:JwtDTO, @UploadedFile() file): Promise<ProfileImage> {
         console.log(file);
-        return { location: file.Location }
+        return this.authService.uploadProfileImageURL(user.id, file.Location);
     }
 }
