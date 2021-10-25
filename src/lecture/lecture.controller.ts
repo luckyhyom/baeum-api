@@ -10,7 +10,8 @@ import { UpdateLectureDto } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
 import { LectureService } from './lecture.service';
 import { Page } from 'src/pagination/Page';
-@Controller('lecture')
+
+@Controller('lectures')
 export class LectureController {
     constructor(private lectureService: LectureService) {}
 
