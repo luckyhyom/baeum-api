@@ -32,7 +32,7 @@ export class AuthService {
         });
 
         let token;
-        token = this.jwtService.sign({ id })
+        token = this.jwtService.sign({ id, name })
         this.setToken(token, res);
         return { id, token, name, about, email, profileImageURL };
     }
@@ -46,7 +46,7 @@ export class AuthService {
 
         let token;
         if (await this.comparePassword(data)) {
-            token = this.jwtService.sign({ id })
+            token = this.jwtService.sign({ id, name })
             this.setToken(token, res);
             return { id, token, name, about, email, profileImageURL };
         } else {
