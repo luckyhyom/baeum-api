@@ -39,13 +39,12 @@ export class LectureRepository extends Repository<Lecture> {
         return await this.findOne({title});
     }
 
-    async getById(id: number): Promise<Lecture> {
-        return await this.findOne(id);
+    async findById(id: number) {
+        return await this.findOne({ id })
     }
 
-    async updateOne(id: number, updateLectureDTO: UpdateLectureDTO): Promise<Lecture> {
-        await this.update(id, updateLectureDTO);
-        return await this.getById(id);
+    updateOne(id: number, data: UpdateLectureDTO) {
+        return this.update(id, { ...data })
     }
 
     paging(queryString: LectureSearchRequest): Promise<[Lecture[], number]> {

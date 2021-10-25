@@ -34,7 +34,7 @@ export class LectureController {
 
     @Get(':id')
     getById(@Param('id') id: number): Promise <Lecture> {
-        const lecture = this.lectureService.getById(id);
+        const lecture = this.lectureService.findById(id);
         console.log(lecture);
         
         if (!lecture) {
@@ -51,8 +51,8 @@ export class LectureController {
 
     @Patch(':id')
     @UseGuards(AuthGuard('jwt'))
-    patchLecture(@Param('id') id: number, @Body() updateLectureDTO: UpdateLectureDTO): Promise<Lecture> {
-        return this.lectureService.updateOne(id, updateLectureDTO);
+    patchLecture(@ParamUser() user: JwtDTO, @Param('id') id: number, @Body() data: UpdateLectureDTO): Promise<Lecture> {
+        return this.lectureService.updateLecture(user.id, id, data);
     }
 
     @Post('thumbnail')
