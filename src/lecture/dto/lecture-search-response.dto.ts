@@ -7,6 +7,7 @@ export class LectureSearchResponse {
     price: number;
     videoURL: string;
     description: string;
+    userId: number;
 
     constructor(entity: Lecture) {
         this.id = entity.id;
@@ -15,6 +16,7 @@ export class LectureSearchResponse {
         this.price = entity.price;
         this.videoURL = entity.videoURL;
         this.description = entity.description;
+        this.userId = entity.userId;
     }
 }
 

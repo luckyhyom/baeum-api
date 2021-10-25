@@ -15,7 +15,8 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.description',
                 'lecture.videoURL',
                 'lecture.price',
-                'lecture.author'
+                'lecture.author',
+                'lecture.userId'
             ])
             .from(Lecture,'lecture')
             .getMany()
@@ -50,9 +51,11 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.description',
                 'lecture.videoURL',
                 'lecture.price',
-                'lecture.author'
+                'lecture.author',
+                'lecture.userId'
             ])
             .from(Lecture, 'lecture')
+            .orderBy('lecture.id', 'DESC')
             .limit(queryString.getLimit())
             .offset(queryString.getOffset());
             

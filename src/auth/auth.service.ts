@@ -34,7 +34,7 @@ export class AuthService {
         let token;
         token = this.jwtService.sign({ id })
         this.setToken(token, res);
-        return { token, name, about, email, profileImageURL };
+        return { id, token, name, about, email, profileImageURL };
     }
 
     async login(data: LoginDTO, res: Response): Promise<LoginResponse> {
@@ -48,7 +48,7 @@ export class AuthService {
         if (await this.comparePassword(data)) {
             token = this.jwtService.sign({ id })
             this.setToken(token, res);
-            return { token, name, about, email, profileImageURL };
+            return { id, token, name, about, email, profileImageURL };
         } else {
             throw new Error('wrong password!')
         }
@@ -66,6 +66,7 @@ export class AuthService {
         await this.userRepository.updateUser(user.id, newData);
         const { id, name, about, email, profileImageURL } = await this.userRepository.findById(user.id);
         return {
+            id,
             token: user.token,
             name,
             about,
@@ -92,8 +93,9 @@ export class AuthService {
     }
 
     async me(user: JwtDTO): Promise<LoginResponse> {
-        const { name, about, email, profileImageURL } = await this.userRepository.findById(user.id);
+        const { id, name, about, email, profileImageURL } = await this.userRepository.findById(user.id);
         return {
+            id,
             token: user.token,
             name,
             about,

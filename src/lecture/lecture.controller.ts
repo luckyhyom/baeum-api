@@ -11,7 +11,6 @@ import { Lecture } from './lecture.entity';
 import { LectureService } from './lecture.service';
 import { Page } from 'src/pagination/Page';
 @Controller('lecture')
-@UseGuards(AuthGuard('jwt'))
 export class LectureController {
     constructor(private lectureService: LectureService) {}
 
@@ -43,11 +42,13 @@ export class LectureController {
     }
 
     @Post()
+    @UseGuards(AuthGuard('jwt'))
     createLecture(@Body() data: CreateLectureDto, @ParamUser() user: JwtDTO): Promise<Lecture> {
         return this.lectureService.create(data, user);
     }
 
     @Patch(':id')
+    @UseGuards(AuthGuard('jwt'))
     patchLecture(@Param('id') id: number, @Body() updateLectureDto: UpdateLectureDto): Promise<Lecture> {
         return this.lectureService.updateOne(id, updateLectureDto);
     }
