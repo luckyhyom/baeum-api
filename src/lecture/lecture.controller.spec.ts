@@ -1,6 +1,6 @@
 import { TestingModule, Test } from "@nestjs/testing";
 import { User } from "src/auth/user.entity";
-import { CreateLectureDto } from "./dto/create-lecture.dto";
+import { CreateLectureDTO } from "./dto/create-lecture.dto";
 import { LectureController } from "./lecture.controller";
 import { LectureService } from "./lecture.service";
 
@@ -9,7 +9,7 @@ import { LectureService } from "./lecture.service";
 describe('lecture Controller', () => {
     let controller: LectureController;
     let user;
-    let lecture: CreateLectureDto;
+    let lecture: CreateLectureDTO;
 
     const mockService = {
         getAll: jest.fn().mockImplementation(),
@@ -36,9 +36,7 @@ describe('lecture Controller', () => {
             title: 'test',
             description: 'test',
             thumbnail: 'test',
-            author: 'tes',
             price: 2,
-            viewStatus: true,
         }
     })
 

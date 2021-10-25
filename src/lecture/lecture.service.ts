@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lecture } from './lecture.entity';
 import { JwtDTO } from 'src/auth/dto/jwt.dto';
-import { CreateLectureDto } from './dto/create-lecture.dto';
-import { UpdateLectureDto } from './dto/update-lecture.dto';
+import { CreateLectureDTO } from './dto/create-lecture.dto';
+import { UpdateLectureDTO } from './dto/update-lecture.dto';
 import { LectureSearchRequest } from './dto/lecture-search-request.dto';
 import { LectureSearchResponse } from './dto/lecture-search-response.dto';
 import { LectureRepository } from './lecture.repository';
@@ -20,7 +20,7 @@ export class LectureService {
         return  this.lectureRepository.getAll();
     }
 
-    create(data: CreateLectureDto, user: JwtDTO): Promise<Lecture> {
+    create(data: CreateLectureDTO, user: JwtDTO): Promise<Lecture> {
         const result = this.lectureRepository.createOne(data,user);
         return result;
     }
@@ -35,11 +35,11 @@ export class LectureService {
         return this.lectureRepository.getById(id);
     }
 
-    updateOne(id: number, updateLectureDto: UpdateLectureDto): Promise<Lecture> {
+    updateOne(id: number, updateLectureDTO: UpdateLectureDTO): Promise<Lecture> {
         const target = this.getById(id);
         if (!target) {
             throw new Error("No lecture.");
         }
-        return this.lectureRepository.updateOne(id, updateLectureDto);
+        return this.lectureRepository.updateOne(id, updateLectureDTO);
     }
 }

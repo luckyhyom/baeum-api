@@ -4,10 +4,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { ParamUser } from 'src/auth/user.decorator';
 import { JwtDTO } from 'src/auth/dto/jwt.dto';
-import { CreateLectureDto } from './dto/create-lecture.dto';
+import { CreateLectureDTO } from './dto/create-lecture.dto';
 import { LectureSearchRequest } from './dto/lecture-search-request.dto';
 import { LectureSearchResponse } from './dto/lecture-search-response.dto';
-import { UpdateLectureDto } from './dto/update-lecture.dto';
+import { UpdateLectureDTO } from './dto/update-lecture.dto';
 import { Lecture } from './lecture.entity';
 import { LectureService } from './lecture.service';
 import { Page } from 'src/pagination/Page';
@@ -45,14 +45,14 @@ export class LectureController {
 
     @Post()
     @UseGuards(AuthGuard('jwt'))
-    createLecture(@Body() data: CreateLectureDto, @ParamUser() user: JwtDTO): Promise<Lecture> {
+    createLecture(@Body() data: CreateLectureDTO, @ParamUser() user: JwtDTO): Promise<Lecture> {
         return this.lectureService.create(data, user);
     }
 
     @Patch(':id')
     @UseGuards(AuthGuard('jwt'))
-    patchLecture(@Param('id') id: number, @Body() updateLectureDto: UpdateLectureDto): Promise<Lecture> {
-        return this.lectureService.updateOne(id, updateLectureDto);
+    patchLecture(@Param('id') id: number, @Body() updateLectureDTO: UpdateLectureDTO): Promise<Lecture> {
+        return this.lectureService.updateOne(id, updateLectureDTO);
     }
 
     @Post('thumbnail')

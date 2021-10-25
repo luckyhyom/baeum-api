@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsOptional, MinLength } from "class-validator";
 
-export class CreateLectureDto {
+export class CreateLectureDTO {
 
     @MinLength( 4, { message: 'title is way too short.' } )
     readonly title: string;

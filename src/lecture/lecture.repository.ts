@@ -1,8 +1,8 @@
 import { createQueryBuilder, EntityRepository, Repository } from "typeorm";
 import { JwtDTO } from "src/auth/dto/jwt.dto";
-import { CreateLectureDto } from "./dto/create-lecture.dto";
+import { CreateLectureDTO } from "./dto/create-lecture.dto";
 import { LectureSearchRequest } from "./dto/lecture-search-request.dto";
-import { UpdateLectureDto } from "./dto/update-lecture.dto";
+import { UpdateLectureDTO } from "./dto/update-lecture.dto";
 import { Lecture } from "./lecture.entity";
 
 @EntityRepository(Lecture)
@@ -24,7 +24,7 @@ export class LectureRepository extends Repository<Lecture> {
 
     }
 
-    async createOne(data: CreateLectureDto, user: JwtDTO): Promise<Lecture> {
+    async createOne(data: CreateLectureDTO, user: JwtDTO): Promise<Lecture> {
         const result = await this.create({
             ...data,
             author: user.name,
@@ -43,8 +43,8 @@ export class LectureRepository extends Repository<Lecture> {
         return await this.findOne(id);
     }
 
-    async updateOne(id: number, updateLectureDto: UpdateLectureDto): Promise<Lecture> {
-        await this.update(id, updateLectureDto);
+    async updateOne(id: number, updateLectureDTO: UpdateLectureDTO): Promise<Lecture> {
+        await this.update(id, updateLectureDTO);
         return await this.getById(id);
     }
 
