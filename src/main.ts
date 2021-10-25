@@ -9,7 +9,11 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalGuards(new CSRFGuard());
   app.enableCors({
-    origin: 'http://127.0.0.1:5500',
+    origin: [
+      'http://127.0.0.1:5500',
+      'http://127.0.0.1:5555',
+      'https://www.makevalue.net'
+    ],
     credentials: true
   });
 
