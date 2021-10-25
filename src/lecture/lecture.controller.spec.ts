@@ -35,7 +35,7 @@ describe('lecture Controller', () => {
         lecture = {
             title: 'test',
             description: 'test',
-            videoURL: 'test',
+            thumbnail: 'test',
             author: 'tes',
             price: 2,
             viewStatus: true,

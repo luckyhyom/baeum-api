@@ -13,7 +13,7 @@ export class Lecture extends BaseEntity {
     description: string;
 
     @Column()
-    videoURL: string;
+    thumbnail: string;
 
     @Column()
     author: string;
@@ -21,7 +21,7 @@ export class Lecture extends BaseEntity {
     @Column()
     price: number;
 
-    @Column()
+    @Column({ default: true })
     viewStatus: boolean;
 
     @Column()
@@ -34,7 +34,7 @@ export class Lecture extends BaseEntity {
         const lecture = new Lecture();
         lecture.title = title;
         lecture.description = '테스트 객체';
-        lecture.videoURL = 'www.test.co.kr';
+        lecture.thumbnail = 'https://nextstep-storage.s3.ap-northeast-2.amazonaws.com/af98e7e689b8411cb51aef899b8be1a2';
         lecture.author = '테스트';
         lecture.price = 100;
         lecture.viewStatus = true;

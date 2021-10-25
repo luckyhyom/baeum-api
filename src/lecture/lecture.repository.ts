@@ -13,7 +13,7 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.id',
                 'lecture.title',
                 'lecture.description',
-                'lecture.videoURL',
+                'lecture.thumbnail',
                 'lecture.price',
                 'lecture.author',
                 'lecture.userId'
@@ -49,7 +49,7 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.id',
                 'lecture.title',
                 'lecture.description',
-                'lecture.videoURL',
+                'lecture.thumbnail',
                 'lecture.price',
                 'lecture.author',
                 'lecture.userId'

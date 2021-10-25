@@ -5,7 +5,7 @@ export class LectureSearchResponse {
     title: string;
     author: string;
     price: number;
-    videoURL: string;
+    thumbnail: string;
     description: string;
     userId: number;
 
@@ -14,7 +14,7 @@ export class LectureSearchResponse {
         this.title = entity.title;
         this.author = entity.author;
         this.price = entity.price;
-        this.videoURL = entity.videoURL;
+        this.thumbnail = entity.thumbnail;
         this.description = entity.description;
         this.userId = entity.userId;
     }

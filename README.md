@@ -536,7 +536,7 @@ type Lecture = {
 type Chapter = {
 	title: string,
 	description: string,
-	videoURL: string,
+	thumbnail: string,
 }
 ```
 
@@ -598,7 +598,7 @@ Request
 		{ 
 			title: string,
 			description: string,
-			videoURL: string,
+			thumbnail: string,
 		},
 		...
 	],
@@ -642,7 +642,7 @@ Request
 		{
 			title: string,
 			description: string,
-			videoURL: string,
+			thumbnail: string,
 		},
 		...
 	],

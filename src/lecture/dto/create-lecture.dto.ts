@@ -9,7 +9,7 @@ export class CreateLectureDto {
     readonly description: string;
 
     @IsOptional()
-    readonly videoURL: string;
+    readonly thumbnail: string;
 
     @IsNotEmpty()
     readonly author: string;
