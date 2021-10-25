@@ -45,4 +45,25 @@ export class LectureService {
         await this.lectureRepository.updateOne(lectureId, data);
         return await this.lectureRepository.findById(lectureId);
     }
+
+    async deleteLecture(userId: number, lectureId: number) {
+        const lecture = await this.lectureRepository.findById(lectureId);
+
+        if(userId !== lecture.userId) {
+            new HttpException('you are not allowed to update this board.', HttpStatus.UNAUTHORIZED)
+        }
+
+        await this.lectureRepository.deleteOne(lectureId);
+
+        const deleted = await this.lectureRepository.findById(lectureId);
+
+        if(deleted.viewStatus !== false) {
+            new HttpException('something went wrong.', HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+
+        console.log(deleted,'deleted');
+        
+
+        return { message: 'board has been deleted' }
+    }
 }

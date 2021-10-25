@@ -19,6 +19,7 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.userId'
             ])
             .from(Lecture,'lecture')
+            .where(`lecture.viewStatus =:viewStatus`, { viewStatus: true })
             .orderBy('lecture.id', 'DESC')
             .getMany()
 
@@ -47,6 +48,10 @@ export class LectureRepository extends Repository<Lecture> {
         return this.update(id, { ...data })
     }
 
+    deleteOne(id: number) {
+        return this.update(id,{ viewStatus: false })
+    }
+
     paging(queryString: LectureSearchRequest): Promise<[Lecture[], number]> {
         // 형태의 차이 일 뿐 가독성이 좋은 것으로 하면 된다.
         const queryBuilder = createQueryBuilder()
@@ -60,6 +65,7 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.userId'
             ])
             .from(Lecture, 'lecture')
+            .where(`lecture.viewStatus =:viewStatus`, { viewStatus: true })
             .orderBy('lecture.id', 'DESC')
             .limit(queryString.getLimit())
             .offset(queryString.getOffset());

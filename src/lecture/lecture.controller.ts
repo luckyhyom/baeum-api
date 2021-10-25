@@ -55,6 +55,12 @@ export class LectureController {
         return this.lectureService.updateLecture(user.id, id, data);
     }
 
+    @Patch('trash/:id')
+    @UseGuards(AuthGuard('jwt'))
+    deleteLecture(@ParamUser() user: JwtDTO, @Param('id') id: number): Promise<{message:string}> {
+        return this.lectureService.deleteLecture(user.id, id);
+    }
+
     @Post('thumbnail')
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(
