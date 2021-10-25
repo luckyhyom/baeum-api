@@ -1,4 +1,5 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { AmazonS3FileInterceptor } from 'nestjs-multer-extended';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { ParamUser } from 'src/auth/user.decorator';
@@ -52,6 +53,18 @@ export class LectureController {
     @UseGuards(AuthGuard('jwt'))
     patchLecture(@Param('id') id: number, @Body() updateLectureDto: UpdateLectureDto): Promise<Lecture> {
         return this.lectureService.updateOne(id, updateLectureDto);
+    }
+
+    @Post('thumbnail')
+    @UseGuards(AuthGuard('jwt'))
+    @UseInterceptors(
+        AmazonS3FileInterceptor('thumbnail', {
+            dynamicPath: 'lectures/thumbnail'
+        }),
+    )
+    uploadThumbnail(@UploadedFile() file) {
+        const thumbnail = file.Location;
+        return { thumbnail };
     }
 }
 
