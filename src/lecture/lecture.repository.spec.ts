@@ -1,37 +1,27 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm"
 import { User } from "src/auth/user.entity"
-import config from "src/configs/config"
 import { Lecture } from "./lecture.entity"
 import { LectureRepository } from "./lecture.repository"
 import { LectureSearchRequest } from "./dto/lecture-search-request.dto"
+import { SQLiteConfig } from "src/configs/typeorm.config"
+import { CreateLectureDTO } from "./dto/create-lecture.dto"
+import { UserRepository } from "src/auth/user.repository"
 
 describe('lecture repository', () => {
     let repository: LectureRepository
-    let entity: Lecture
-    let mockRepository = {
+    let userRepository: UserRepository
 
-    }
     beforeEach(async () => {
         const moduleRef: TestingModule = await Test.createTestingModule({
             imports: [
-                TypeOrmModule.forRoot({
-                    type: 'postgres',
-                    host: config.db.host,
-                    port: 5432,
-                    username: config.db.username,
-                    password: config.db.password,
-                    database: config.db.database,
-                    entities: [__dirname + '/../**/*.entity.{js,ts}'],
-                    synchronize: true,
-                    keepConnectionAlive: true
-                }),
-                TypeOrmModule.forFeature([Lecture, LectureRepository]),
+                TypeOrmModule.forRoot(SQLiteConfig),
+                TypeOrmModule.forFeature([Lecture, LectureRepository, User, UserRepository ]),
             ],
             providers: [ LectureRepository ],
         }).compile();
         repository = moduleRef.get<LectureRepository>(LectureRepository);
-        entity = moduleRef.get(getRepositoryToken(Lecture))
+        userRepository = moduleRef.get<UserRepository>(UserRepository);
     })
 
     it('should be defined', () => {
@@ -46,14 +36,35 @@ describe('lecture repository', () => {
 
         expect(repository).toBeDefined();
     })
-    it('shoud be..', async () => {
-        const title: string = '';
-        const pageNo: number = 1;
-        const pageSize: number = 10;
 
-        const req: LectureSearchRequest = LectureSearchRequest.create(title,pageNo,pageSize);
-        const result = await repository.paging(req);
-        const lectures = result[0];
-        expect(lectures.length).toBe(10)
+    describe('Create and paging',() => {
+        it('shoud return Lastest Lecture Number', async () => {
+            const title: string = '';
+            const pageNo: number = 1;
+            const pageSize: number = 10;
+    
+            const req: LectureSearchRequest = LectureSearchRequest.create(title,pageNo,pageSize);
+    
+            const newUser = await userRepository.createUser({
+                userId:'testuser01',
+                password:'test12312',
+                name:'khm',
+                about:'tests',
+                email:'bs_khm@naver.com',
+            });
+    
+            // 20 is going to be Latest Lecture's ID
+            const totalCount = 20;
+            for (let i = 0; i <= totalCount; i++) {
+                await repository.createOne(CreateLectureDTO.create(`No.${i} Javascripts`),{id:newUser.id,name:newUser.name,token:''})
+            }
+
+            const result = await repository.paging(req);
+            const lectures = result[0];
+
+            // expect(lectures.length).toBe(10)
+            expect(lectures[0].title).toBe(`No.${totalCount} Javascripts`)
+        })
     })
+
 })

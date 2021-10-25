@@ -3,17 +3,26 @@ import { IsInt, IsNotEmpty, IsOptional, MinLength } from "class-validator";
 export class CreateLectureDTO {
 
     @MinLength( 4, { message: 'title is way too short.' } )
-    readonly title: string;
+    title: string;
 
     @MinLength( 10, { message: 'description is way too short.' } )
-    readonly description: string;
+    description: string;
 
     @IsOptional()
-    readonly thumbnail: string;
+    thumbnail: string;
 
     @IsNotEmpty()
     @IsInt()
-    readonly price: number;
+    price: number;
+
+    static create(title: string|null) {
+        const param = new CreateLectureDTO();
+        param.title = title;
+        param.description = "JS 스터디셀러라구요";
+        param.thumbnail =  "https://nextstep-storage.s3.ap-northeast-2.amazonaws.com/af98e7e689b8411cb51aef899b8be1a2";
+        param.price = 7777;
+        return param;
+    }
 }
 
 /**
