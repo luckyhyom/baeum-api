@@ -19,6 +19,7 @@ export class LectureRepository extends Repository<Lecture> {
                 'lecture.userId'
             ])
             .from(Lecture,'lecture')
+            .orderBy('lecture.id', 'DESC')
             .getMany()
 
     }
