@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, Length, MinLength, Validate, Validator } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, MinLength } from "class-validator";
 
 export class CreateLectureDto {
 
@@ -12,15 +12,8 @@ export class CreateLectureDto {
     readonly thumbnail: string;
 
     @IsNotEmpty()
-    readonly author: string;
-
-    @IsNotEmpty()
     @IsInt()
     readonly price: number;
-
-    @IsNotEmpty()
-    @IsBoolean()
-    readonly viewStatus: boolean;
 }
 
 /**

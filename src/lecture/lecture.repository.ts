@@ -25,7 +25,12 @@ export class LectureRepository extends Repository<Lecture> {
     }
 
     async createOne(data: CreateLectureDto, user: JwtDTO): Promise<Lecture> {
-        const result = await this.create({ ...data, user: { id: user.id } });
+        const result = await this.create({
+            ...data,
+            author: user.name,
+            viewStatus: true,
+            user: { id: user.id }
+        });
         await this.save(result);
         return result;
     }
