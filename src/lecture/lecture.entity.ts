@@ -35,7 +35,7 @@ export class Lecture extends BaseEntity {
         lecture.title = title;
         lecture.description = '테스트 객체';
         lecture.thumbnail = 'https://nextstep-storage.s3.ap-northeast-2.amazonaws.com/af98e7e689b8411cb51aef899b8be1a2';
-        lecture.author = '테스트';
+        lecture.author = user.name;
         lecture.price = 100;
         lecture.viewStatus = true;
         lecture.userId = user.id;

@@ -23,8 +23,9 @@ describe('lecture Service', () => {
     let mockRepository = {
         createOne: jest.fn((lecture, user) => {
             return {
-                id: Date.now(),
-                ...lecture
+                id: user.id,
+                ...lecture,
+                author: user.name
             }
         }),
 
@@ -54,12 +55,21 @@ describe('lecture Service', () => {
     describe('create Lecture', () => {
         it('should return a lecture', () => {
             const user = new User();
-            const title = 'test';
-            const lecture = Lecture.createOne(title,user);
+            user.id = 1;
+            user.name = "김효민";
 
-            expect(service.create(lecture,user)).toEqual({
-                id: expect.any(Number),
-                ...lecture
+            const jwt = {
+                id: user.id,
+                name:user.name,
+                token: ''
+            }
+
+            const title = 'test';
+            const lectureDTO = Lecture.createOne(title,user);
+
+            expect(service.create(lectureDTO,jwt)).toEqual({
+                id: user.id,
+                ...lectureDTO
             });
         })
     })
