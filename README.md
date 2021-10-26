@@ -1,7 +1,22 @@
 # Baeum API
 
 
-[배포된 개발중인 웹 사이트입니다.](https://www.makevalue.net/) 현재 이미지 업로드,등 기능 추가 후 메모리 문제로 인해 앱이 실행되지 않아 swap할당,등 테스트 진행중입니다. \
+[직접 배포한 웹사이트](https://www.makevalue.net/) \
+회원 가입 후 JWT와 함께 터미널에 입력하면 게시글이 생성됩니다.
+
+```tsx
+curl -X POST 'https://www.makevalue.net/api/lectures' \
+-H 'CSRF_TOKEN: $2a$04$BGIFcXFklqUWNxCADjPRV.xD/WPfCHhEVsXnyWiBVgYgO6tCN9hxO' \
+-H 'Authorization: Bearer ' \
+-H 'Content-Type: application/json' \
+-d '{
+    "title": "No.1 Linux 강의!",
+    "description": "JS 스터디셀러라구!!",
+    "thumbnail": "https://cdn.inflearn.com/public/course-325918-cover/f641b64b-1d8d-41f7-a159-10579aac950b",
+    "price": 21000
+}'
+```
+
 [Front-end](https://github.com/luckyhyom/baeum-web) \
 [Infra 계획](https://github.com/luckyhyom/AWS/tree/main/baeum)
 
