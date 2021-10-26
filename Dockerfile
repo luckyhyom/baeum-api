@@ -34,3 +34,9 @@ EXPOSE 3000
 
 # Node ENV
 ENV NODE_ENV=production
+ENV NODE_OPTIONS=--max_old_space_size=1024
+#ENV DB_HOST postgres
+#ENV HOST_PORT 5432
+#ENV DB_USER postgres
+#ENV DB_PASSWORD super1234
+#ENV DB_DATABASE baeum-api
