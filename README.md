@@ -1,7 +1,7 @@
 # Baeum API
 
 
-[배포된 개발중인 웹 사이트입니다.](https://www.makevalue.net/) \
+[배포된 개발중인 웹 사이트입니다.](https://www.makevalue.net/) 현재 이미지 업로드,등 기능 추가 후 메모리 문제로 인해 앱이 실행되지 않아 swap할당,등 테스트 진행중입니다. \
 [Front-end](https://github.com/luckyhyom/baeum-web) \
 [Infra 계획](https://github.com/luckyhyom/AWS/tree/main/baeum)
 
