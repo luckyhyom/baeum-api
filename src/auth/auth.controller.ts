@@ -58,7 +58,8 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(
         AmazonS3FileInterceptor('image', {
-        dynamicPath: 'profile'
+            randomFilename: true,
+            dynamicPath: 'profile'
         }),
     )
     uploadFile(@ParamUser() user:JwtDTO, @UploadedFile() file): Promise<ProfileImage> {

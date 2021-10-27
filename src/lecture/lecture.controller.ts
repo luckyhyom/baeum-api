@@ -65,6 +65,7 @@ export class LectureController {
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(
         AmazonS3FileInterceptor('thumbnail', {
+            randomFilename: true,
             dynamicPath: 'lectures/thumbnail'
         }),
     )
