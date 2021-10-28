@@ -10,6 +10,8 @@
 
 
 [AWS EC2, S3, Docker, Docker-compose를 이용하여 직접 배포한 NestJS + React 웹 사이트 입니다.](https://www.makevalue.net/) \
+이미지 파일 업로드 에러를 수정중입니다. 회원가입, 게시글 CRUD 가능한 상태입니다.
+
 회원 가입 후 JWT와 함께 터미널에 입력하면 게시글이 생성됩니다.
 
 ```tsx
