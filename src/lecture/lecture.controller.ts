@@ -61,18 +61,18 @@ export class LectureController {
         return this.lectureService.deleteLecture(user.id, id);
     }
 
-    @Post('thumbnail')
-    @UseGuards(AuthGuard('jwt'))
-    @UseInterceptors(
-        AmazonS3FileInterceptor('thumbnail', {
-            randomFilename: true,
-            dynamicPath: 'lectures/thumbnail'
-        }),
-    )
-    uploadThumbnail(@UploadedFile() file) {
-        const thumbnail = file.Location;
-        return { thumbnail };
-    }
+    // @Post('thumbnail')
+    // @UseGuards(AuthGuard('jwt'))
+    // @UseInterceptors(
+    //     AmazonS3FileInterceptor('thumbnail', {
+    //         randomFilename: true,
+    //         dynamicPath: 'lectures/thumbnail'
+    //     }),
+    // )
+    // uploadThumbnail(@UploadedFile() file) {
+    //     const thumbnail = file.Location;
+    //     return { thumbnail };
+    // }
 }
 
 /**

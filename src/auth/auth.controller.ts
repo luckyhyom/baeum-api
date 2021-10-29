@@ -54,16 +54,16 @@ export class AuthController {
         return { csrfToken };
     }
 
-    @Post('image')
-    @UseGuards(AuthGuard('jwt'))
-    @UseInterceptors(
-        AmazonS3FileInterceptor('image', {
-            randomFilename: true,
-            dynamicPath: 'profile'
-        }),
-    )
-    uploadFile(@ParamUser() user:JwtDTO, @UploadedFile() file): Promise<ProfileImage> {
-        console.log(file);
-        return this.authService.uploadProfileImageURL(user.id, file.Location);
-    }
+    // @Post('image')
+    // @UseGuards(AuthGuard('jwt'))
+    // @UseInterceptors(
+    //     AmazonS3FileInterceptor('image', {
+    //         randomFilename: true,
+    //         dynamicPath: 'profile'
+    //     }),
+    // )
+    // uploadFile(@ParamUser() user:JwtDTO, @UploadedFile() file): Promise<ProfileImage> {
+    //     console.log(file);
+    //     return this.authService.uploadProfileImageURL(user.id, file.Location);
+    // }
 }
