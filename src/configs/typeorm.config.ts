@@ -15,7 +15,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
 
 
 export const SQLiteConfig: TypeOrmModuleOptions = {
-    type: 'sqlite',
+    type: 'better-sqlite3',
     database: ':memory:',
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: true,
