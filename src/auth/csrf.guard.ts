@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import * as bcrypt from 'bcryptjs'
 import { Observable } from "rxjs";
 import config from "src/configs/config";
@@ -12,16 +12,26 @@ export class CSRFGuard implements CanActivate {
         return this.checkCSRFToken(request)
     }
 
-    checkCSRFToken(request) {
+    async checkCSRFToken(request) {
         if (
             request.method === 'GET' ||
             request.method === 'OPTIONS' ||
             request.method === 'HEAD'
         ) { 
             return true;
-        }
-        // console.log(request);
-        return this.validateCSRFToken(request.headers['csrf_token']);
+        };
+
+        const csrfToken = await request.headers['csrf_token'];
+
+        if (
+            !csrfToken ||
+            !await this.validateCSRFToken(csrfToken)
+        ) {
+            console.warn(`유효하지 않은 CSRF 토큰 입니다. (${csrfToken})`);
+            throw new HttpException('Something went wrong.', HttpStatus.FORBIDDEN);
+        };
+
+        return true;
     }
     
     async validateCSRFToken(csrfToken: string): Promise<boolean> {
