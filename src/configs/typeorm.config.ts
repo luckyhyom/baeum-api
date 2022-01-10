@@ -19,6 +19,6 @@ export const SQLiteConfig: TypeOrmModuleOptions = {
     database: ':memory:',
     entities: [__dirname + '/../**/*.entity.{js,ts}'],
     synchronize: true,
-    logging: true,
+    // logging: true,
     keepConnectionAlive: true,
 }
