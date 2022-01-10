@@ -18,7 +18,7 @@ export class CreateUserDTO {
     @IsNotEmpty()
 	name: string;
 
-    @Length(8,50)
+    @Length(8, 500)
     @IsString()
     @IsNotEmpty()
 	about: string;

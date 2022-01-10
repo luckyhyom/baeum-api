@@ -38,20 +38,16 @@ export class AuthService {
     }
 
     async login(data: LoginDTO, res: Response): Promise<LoginResponse> {
-        const { id, name, about, email, profileImageURL } = await this.userRepository.findByUserId(data.userId);
-
-        if (!id) {
-            throw new Error("no user");
+        const user = await this.userRepository.findByUserId(data.userId);
+        if (
+            !user ||
+            !await this.comparePassword(data)
+        ) {
+            throw new HttpException('ID or Password is Wrong.', HttpStatus.UNAUTHORIZED);
         }
-
-        let token;
-        if (await this.comparePassword(data)) {
-            token = this.jwtService.sign({ id, name })
-            this.setToken(token, res);
-            return { id, token, name, about, email, profileImageURL };
-        } else {
-            throw new Error('wrong password!')
-        }
+        let token = this.jwtService.sign({ id: user.id, name: user.name })
+        this.setToken(token, res);
+        return LoginResponse.of(user, token);
     }
     
     async comparePassword(data) {

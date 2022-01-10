@@ -1,7 +1,6 @@
 import { AuthGuard } from '@nestjs/passport';
-import { Body, Controller, Delete, Get, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { AmazonS3FileInterceptor } from 'nestjs-multer-extended';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { JwtDTO } from './dto/jwt.dto';
@@ -9,7 +8,6 @@ import { LoginResponse } from './dto/login-response.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { LoginDTO } from './dto/login.dto';
 import { ParamUser } from './user.decorator';
-import { ProfileImage } from './dto/profileImage.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,8 +22,8 @@ export class AuthController {
     }
 
     @Post('login')
-    login(@Body() loginDTO: LoginDTO, @Res({passthrough: true}) res: Response): Promise<LoginResponse> {
-        return this.authService.login(loginDTO, res);
+    async login(@Body() loginDTO: LoginDTO, @Res({passthrough: true}) res: Response): Promise<LoginResponse> {
+        return await this.authService.login(loginDTO, res);
     }
 
     @Patch()
@@ -56,6 +54,7 @@ export class AuthController {
         const csrfToken = await this.authService.createCSRFToken()
         return { csrfToken };
     }
+}
 
     // @Post('image')
     // @UseGuards(AuthGuard('jwt'))
@@ -69,4 +68,3 @@ export class AuthController {
     //     console.log(file);
     //     return this.authService.uploadProfileImageURL(user.id, file.Location);
     // }
-}
