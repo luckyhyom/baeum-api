@@ -20,8 +20,8 @@ export class CSRFGuard implements CanActivate {
         ) { 
             return true;
         };
-
-        const csrfToken = await request.headers['csrf_token'];
+        
+        const csrfToken = await request.headers['csrf-token'];
 
         if (
             !csrfToken ||
