@@ -10,7 +10,6 @@ export class CreateUserDTO {
     @Length(10,30)
     @IsString()
     @IsNotEmpty()
-    @IsAlphanumeric()
 	password: string;
 
     @Length(2, 100)
