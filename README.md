@@ -8,23 +8,8 @@
 
 # Baeum API
 
-
-[AWS EC2, S3, Docker, Docker-compose를 이용하여 직접 배포한 NestJS + React 웹 사이트 입니다.](https://www.makevalue.net/) \
-
-회원 가입 후 JWT와 함께 터미널에 입력하면 게시글이 생성됩니다.
-
-```tsx
-curl -X POST 'https://www.makevalue.net/api/lectures' \
--H 'CSRF_TOKEN: $2a$04$BGIFcXFklqUWNxCADjPRV.xD/WPfCHhEVsXnyWiBVgYgO6tCN9hxO' \
--H 'Authorization: Bearer ' \
--H 'Content-Type: application/json' \
--d '{
-    "title": "No.1 Linux 강의!",
-    "description": "JS 스터디셀러라구!!",
-    "thumbnail": "https://cdn.inflearn.com/public/course-325918-cover/f641b64b-1d8d-41f7-a159-10579aac950b",
-    "price": 21000
-}'
-```
+인프런을 모티브로 제작중인 개인 프로젝트입니다. </br>
+[AWS EC2, S3, Docker, Docker-compose를 이용하여 직접 배포한 NestJS + React 웹 사이트 입니다.](https://www.makevalue.net/)
 
 [Front-end](https://github.com/luckyhyom/baeum-web) \
 [Infra 계획](https://github.com/luckyhyom/AWS/tree/main/baeum)
@@ -44,6 +29,14 @@ git clone https://github.com/luckyhyom/baeum-api.git
 npm i
 npm run start:dev
 ```
+
+### 유닛 테스트, 통합 테스트
+
+```tsx
+npm run test
+npm run test:e2e
+```
+
 
 ### 회원가입 `POST` /auth/signup
 
@@ -271,24 +264,8 @@ Response `200`
 }
 ```
 
-### 유닛 테스트
 
-src/lecture/lecture.repository.spec.ts, 등..
-
-```tsx
-npm run test
-```
-
-
-## Description
-
-지속적으로 리팩토링 하게 될 학습용 프로젝트 입니다.
-
-- 학습한 것을 실제로 사용 및 응용
-- 변화에 대응할 수 있는 좋은 설계를 위한 리팩토링 훈련
-
-## Question List & Memo
-
+# Question List & Memo
 
 ### single responsibility principle !
   - 하나의 책임을 가진 객체들
