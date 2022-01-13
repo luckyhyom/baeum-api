@@ -147,5 +147,80 @@ describe('Auth Integration', () => {
             });
         });
     });
+
+    describe('POST to /auth/logout', () => {
+        it('쿠키의 값을 비워서 반환한다.', async () => {
+            const res2 = await req.post('/auth/logout')
+                .set(csrf);
+
+            expect(res2.headers['set-cookie'][0]).toMatch('token=;');
+        });
+    });
+
+    describe('Patch to /auth', () => {
+        it('헤더에 유효한 토큰이 없을 시', async () => {
+            const user = await createUser(req, csrf);
+            const updatedData = '수정된 어바웃 텍스트 정보...........';
+
+            const res = await req.patch('/auth')
+                .set(csrf)
+                .send({
+                    about: updatedData
+                });
+        
+            expect(res.status).toBe(401);
+            expect(res.body.message).toBe('Unauthorized');
+        });
+
+        it('수정된 유저 정보 반환', async () => {
+            const user = await createUser(req, csrf);
+            const updatedData = '수정된 어바웃 텍스트 정보...........';
+
+            const res = await req.patch('/auth')
+                .set(csrf)
+                .set('Authorization', `Bearer ${user.token}`)
+                .send({
+                    about: updatedData
+                });
+
+            expect(res.body).toStrictEqual({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                profileImageURL: user.profileImageURL,
+                token: user.token,
+                about: updatedData
+            });
+        });
+    });
+
+    describe('GET to /auth/me', () => {
+        it('헤더에 유효한 토큰이 없을 시', async () => {
+            const user = await createUser(req, csrf);
+
+            const res = await req.get('/auth/me')
+                .set(csrf);
+            
+            expect(res.status).toBe(401);
+            expect(res.body.message).toBe('Unauthorized');
+        });
+
+        it('유저 정보 반환', async () => {
+            const user = await createUser(req, csrf);
+
+            const res = await req.get('/auth/me')
+                .set(csrf)
+                .set('Authorization', `Bearer ${user.token}`);
+            
+            expect(res.body).toStrictEqual({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                profileImageURL: user.profileImageURL,
+                token: user.token,
+                about: user.about
+            });
+        });
+    });
 });
 
